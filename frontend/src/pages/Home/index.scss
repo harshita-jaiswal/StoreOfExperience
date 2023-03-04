@@ -1,0 +1,12 @@
+.Home {
+    margin: 5.5em 10em;
+    display: flex;
+    max-width: 100%;
+    background-color: #ffffff;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    &__card {
+        width: calc(33.33% - 70px);
+        margin: 0 2em 3.5em;
+    }
+}

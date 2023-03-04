@@ -1,0 +1,17 @@
+.cardPlaceholder {
+    height: 335px;
+    width: 305px;
+    background-color: #e5e5e5;
+    margin: 0 2em 3.5em;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    &__plusIcon {
+        height: 120px;
+        width: 120px;
+    }
+    &:hover {
+        box-shadow: 0 0 10px rgb(0 0 0 / 10%);
+    }
+}

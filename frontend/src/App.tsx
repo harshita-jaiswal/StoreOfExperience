@@ -1,21 +1,30 @@
-import './App.css'
+import './App.scss'
 import { Link, Route, Routes } from 'react-router-dom';
-import Home from './components/Home';
-import Converter from './components/Converter';
+import Header from './components/Header';
+import Footer from './components/Footer';
+import Home from "./pages/Home";
 
 function App() {
+   
     return (
         <div className="App">
-            <nav>
+            {/* <nav>
                 <div className="menu">
                     <Link to="/">Home</Link>
                     <Link to="/converter">Converter</Link>
                 </div>
-            </nav>
-            <Routes>
+            </nav> */}
+            {/* <Routes>
                 <Route path="/converter" element={<Converter />} />
                 <Route path="/" element={<Home />} />
+            </Routes> */}
+            <Header/>
+            {/* <Home/> */}
+            <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/add-experience" element={<Home />} />
             </Routes>
+            <Footer/>
         </div>
     )
 }
