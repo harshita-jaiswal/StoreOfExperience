@@ -1,0 +1,36 @@
+.ImageWrapper {
+    margin-bottom: 0;
+    height: 100%;
+    width: 100%;
+    padding-bottom: 0;
+    &__upload {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+    }
+    &__upload-preview {
+        position: relative;
+    }
+    .img {
+        height: 320px;
+    }
+    .editIcon {
+        position: absolute;
+        top: 45%;
+        z-index: 100;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+    }
+    &__addIcon {
+        text-align: center;
+        color: #9f9a9a;
+        .galleryIcon {
+            height: 40px;
+            width: 40px;
+            color: #9f9a9a;
+        }
+    }
+}

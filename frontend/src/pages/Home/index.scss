@@ -1,12 +1,21 @@
 .Home {
     margin: 5.5em 10em;
-    display: flex;
     max-width: 100%;
+    min-height: 61%;
     background-color: #ffffff;
-    flex-wrap: wrap;
-    align-items: flex-start;
+    &__title {
+        font-size: 2em;
+        color: #000000;
+        font-weight: 500;
+    }
+    &__listing {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-start;
+
+    }
     &__card {
         width: calc(33.33% - 70px);
-        margin: 0 2em 3.5em;
+        margin: 0 4em 3.5em 0;
     }
 }

@@ -3,6 +3,7 @@ import { Link, Route, Routes } from 'react-router-dom';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import Home from "./pages/Home";
+import AddExperience from "./pages/AddExperience";
 
 function App() {
    
@@ -22,7 +23,7 @@ function App() {
             {/* <Home/> */}
             <Routes>
                 <Route path="/" element={<Home />} />
-                <Route path="/add-experience" element={<Home />} />
+                <Route path="/add-experience" element={<AddExperience />} />
             </Routes>
             <Footer/>
         </div>

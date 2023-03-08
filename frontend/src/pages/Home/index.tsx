@@ -37,14 +37,17 @@ const Home = () => {
     ]
     return (
         <div className="Home">
-            {
-                mainData.length && mainData.map((data: any) => {
-                    return <div className="Home__card">
-                        <Card key={data.id} place={data.title} description={data.description} imgUrl={data.imgUrl} />
-                    </div>
-                })
-            }
-           <CardPlaceholder />
+           <p className='Home__title'>Experiences</p>
+           <div className='Home__listing'>
+                {
+                    mainData.length && mainData.map((data: any) => {
+                        return <div className="Home__card">
+                            <Card key={data.id} place={data.title} description={data.description} imgUrl={data.imgUrl} />
+                        </div>
+                    })
+                }
+                <CardPlaceholder />
+           </div>
         </div>
     )
 }
