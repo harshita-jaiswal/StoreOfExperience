@@ -1,5 +1,3 @@
-/** @module Routes */
-import cors from "cors";
 import { User } from "./db/models/user.js";
 import { IPHistory } from "./db/models/ip_history.js";
 import { Profile } from "./db/models/profile.js";
@@ -11,7 +9,7 @@ import { ILike, LessThan, Not } from "typeorm";
 export async function experience_routes(app) {
     // Middleware
     // TODO: Refactor this in favor of fastify-cors
-    app.use(cors());
+    // app.use(cors());
     /**
      * Route replying to /test path for test-testing
      * @name get/test
@@ -108,7 +106,9 @@ export async function experience_routes(app) {
      * @name get/profiles
      * @function
      */
-    app.get("/profiles", async (req, reply) => {
+    app.get("/profiles", {
+        onRequest: [app.auth]
+    }, async (req, reply) => {
         let profiles = await app.db.profile.find();
         reply.send(profiles);
     });

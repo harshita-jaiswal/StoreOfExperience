@@ -1,5 +1,5 @@
 /** @module Routes */
-import cors from "cors";
+// import cors from "cors";
 import {FastifyInstance, FastifyReply, FastifyRequest, RouteShorthandOptions} from "fastify";
 import {User} from "./db/models/user";
 import {IPHistory} from "./db/models/ip_history";
@@ -14,7 +14,7 @@ export async function experience_routes(app: FastifyInstance): Promise<void> {
 
 	// Middleware
 	// TODO: Refactor this in favor of fastify-cors
-	app.use(cors());
+	// app.use(cors());
 
 	/**
 	 * Route replying to /test path for test-testing
