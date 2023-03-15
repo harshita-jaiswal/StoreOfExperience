@@ -1,6 +1,7 @@
 /** @module Seeds/User */
 import { User } from "../models/user.js";
 import { Seeder } from "../../lib/seed_manager.js";
+import { hash } from "bcrypt";
 /**
  * UserSeeder class - Model class for interacting with "users" table
  */
@@ -21,6 +22,7 @@ export class UserSeeder extends Seeder {
             let user = new User();
             user.name = "user" + i;
             user.email = "user" + i + "@email.com";
+            user.password = await hash("password", 2);
             await user.save();
             app.log.info("Seeded user " + i);
         }

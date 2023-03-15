@@ -4,9 +4,10 @@ import { DataSource } from 'typeorm';
 // Similar reasoning as above, we need to add the file extensions to this file's imports for CLI usage
 import { User } from "../models/user.js";
 import { IPHistory } from "../models/ip_history.js";
-import { Initialize1676281754950 } from "../migrations/1676281754950-Initialize.js";
 import { Profile } from "../models/profile.js";
-import { ProfilesMigration1676586883555 } from "../migrations/1676586883555-ProfilesMigration.js";
+import { Match } from "../models/match.js";
+import { Message } from "../models/message.js";
+import { initialize1678868707087 } from "../migrations/1678868707087-initialize.js";
 dotenv.config();
 // @ts-ignore 
 const env = process.env;
@@ -21,11 +22,12 @@ export const AppDataSource = new DataSource({
     entities: [
         User,
         IPHistory,
-        Profile
+        Profile,
+        Match,
+        Message
     ],
     migrations: [
-        Initialize1676281754950,
-        ProfilesMigration1676586883555
+        initialize1678868707087,
     ],
     // DANGER DANGER our convenience will nuke production data!
     synchronize: false

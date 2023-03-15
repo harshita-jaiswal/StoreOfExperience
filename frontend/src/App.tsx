@@ -18,7 +18,8 @@ function App() {
 		const fetchMatches = async() => {
             debugger
 			// Note we no longer have to call axios with a huge url OR worry about auth, both automated!
-			const matchesRes = await httpClient.get("/profiles");
+			const matchesRes = await httpClient.get("/matches");
+			// const decode = await httpClient.get("/decode");
 			// setMatches(matchesRes.data);
             console.log('api---', matchesRes);
 		};

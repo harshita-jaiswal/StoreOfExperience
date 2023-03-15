@@ -11,6 +11,8 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 import { BaseEntity, Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { IPHistory } from "./ip_history.js";
 import { Profile } from "./profile.js";
+import { Message } from "./message.js";
+import { hashSync } from "bcrypt";
 /**
  *  Class representing user table
  */
@@ -18,10 +20,16 @@ let User = class User extends BaseEntity {
     id;
     name;
     email;
+    password;
     // IPHistory
     ips;
     // Profile
     profiles;
+    // Message - Sender
+    sent;
+    // Message - Recipient
+    inbox;
+    badwords;
     created_at;
     updated_at;
 };
@@ -41,6 +49,10 @@ __decorate([
     __metadata("design:type", String)
 ], User.prototype, "email", void 0);
 __decorate([
+    Column({ type: "text", default: hashSync("password", 2) }),
+    __metadata("design:type", String)
+], User.prototype, "password", void 0);
+__decorate([
     OneToMany((type) => IPHistory, (ip) => ip.user),
     __metadata("design:type", Object)
 ], User.prototype, "ips", void 0);
@@ -48,6 +60,20 @@ __decorate([
     OneToMany((type) => Profile, (p) => p.user),
     __metadata("design:type", Object)
 ], User.prototype, "profiles", void 0);
+__decorate([
+    OneToMany((type) => Message, (ms) => ms.sender),
+    __metadata("design:type", Object)
+], User.prototype, "sent", void 0);
+__decorate([
+    OneToMany((type) => Message, (mr) => mr.recipient),
+    __metadata("design:type", Object)
+], User.prototype, "inbox", void 0);
+__decorate([
+    Column({
+        default: 0
+    }),
+    __metadata("design:type", Number)
+], User.prototype, "badwords", void 0);
 __decorate([
     CreateDateColumn(),
     __metadata("design:type", String)
