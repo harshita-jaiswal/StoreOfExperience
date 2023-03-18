@@ -16,9 +16,8 @@ function App() {
     useEffect( () => {
 		// Reminder that useEffect itself CANNOT be async!
 		const fetchMatches = async() => {
-            debugger
 			// Note we no longer have to call axios with a huge url OR worry about auth, both automated!
-			const matchesRes = await httpClient.get("/matches");
+			const matchesRes = await httpClient.get("/user");
 			// const decode = await httpClient.get("/decode");
 			// setMatches(matchesRes.data);
             console.log('api---', matchesRes);
@@ -27,6 +26,7 @@ function App() {
 		fetchMatches()
 			.catch(console.error);
 	},[]);
+
     return (
         <div className="App">
             {/* <nav>

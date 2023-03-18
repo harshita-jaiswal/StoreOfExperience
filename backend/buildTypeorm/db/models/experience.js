@@ -7,60 +7,61 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-/** @module Models/User */
-import { BaseEntity, Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
-import { Experience } from "./experience.js";
-/**
- *  Class representing user table
- */
-let User = class User extends BaseEntity {
+/** @module Models/Match */
+import { BaseEntity, Column, CreateDateColumn, DeleteDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { User } from "./user.js";
+let Experience = class Experience extends BaseEntity {
     id;
-    name;
-    email;
-    sub;
-    picture;
-    // Experience
+    user;
+    title;
     experience;
+    sub;
+    date;
+    image;
     created_at;
-    updated_at;
+    deleted_at;
 };
 __decorate([
     PrimaryGeneratedColumn(),
     __metadata("design:type", Number)
-], User.prototype, "id", void 0);
+], Experience.prototype, "id", void 0);
 __decorate([
-    Column({
-        length: 100,
-        type: "varchar"
+    ManyToOne((type) => User, (user) => user.experience, {
+        cascade: true,
+        onDelete: "CASCADE"
     }),
-    __metadata("design:type", String)
-], User.prototype, "name", void 0);
-__decorate([
-    Column('text'),
-    __metadata("design:type", String)
-], User.prototype, "email", void 0);
-__decorate([
-    Column('text'),
-    __metadata("design:type", String)
-], User.prototype, "sub", void 0);
-__decorate([
-    Column('text'),
-    __metadata("design:type", String)
-], User.prototype, "picture", void 0);
-__decorate([
-    OneToMany((type) => Experience, (e) => e.user),
     __metadata("design:type", Object)
-], User.prototype, "experience", void 0);
+], Experience.prototype, "user", void 0);
+__decorate([
+    Column('text'),
+    __metadata("design:type", String)
+], Experience.prototype, "title", void 0);
+__decorate([
+    Column('text'),
+    __metadata("design:type", String)
+], Experience.prototype, "experience", void 0);
+__decorate([
+    Column('text'),
+    __metadata("design:type", String)
+], Experience.prototype, "sub", void 0);
+__decorate([
+    Column('text'),
+    __metadata("design:type", String)
+], Experience.prototype, "date", void 0);
+__decorate([
+    Column('text'),
+    __metadata("design:type", String)
+], Experience.prototype, "image", void 0);
 __decorate([
     CreateDateColumn(),
     __metadata("design:type", String)
-], User.prototype, "created_at", void 0);
+], Experience.prototype, "created_at", void 0);
 __decorate([
-    UpdateDateColumn(),
+    DeleteDateColumn(),
     __metadata("design:type", String)
-], User.prototype, "updated_at", void 0);
-User = __decorate([
-    Entity({ name: "users" })
-], User);
-export { User };
-//# sourceMappingURL=user.js.map
+], Experience.prototype, "deleted_at", void 0);
+Experience = __decorate([
+    Entity()
+], Experience);
+export { Experience };
+//# sourceMappingURL=experience.js.map

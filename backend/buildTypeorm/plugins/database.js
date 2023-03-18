@@ -2,11 +2,8 @@
 import "reflect-metadata";
 import fp from "fastify-plugin";
 import { User } from "../db/models/user.js";
-import { IPHistory } from "../db/models/ip_history.js";
-import { Match } from "../db/models/match.js";
 import { AppDataSource } from "../db/datasources/dev_datasource.js";
-import { Profile } from "../db/models/profile.js";
-import { Message } from "../db/models/message.js";
+import { Experience } from "../db/models/experience.js";
 /**
  * Connects and decorates fastify with our Database connection
  * @function
@@ -20,10 +17,7 @@ const DbPlugin = fp(async (app, options, done) => {
     app.decorate("db", {
         connection: dataSourceConnection,
         user: dataSourceConnection.getRepository(User),
-        ip: dataSourceConnection.getRepository(IPHistory),
-        match: dataSourceConnection.getRepository(Match),
-        message: dataSourceConnection.getRepository(Message),
-        profile: dataSourceConnection.getRepository(Profile),
+        experience: dataSourceConnection.getRepository(Experience),
     });
     done();
 }, {

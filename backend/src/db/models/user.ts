@@ -10,10 +10,7 @@ import {
 	UpdateDateColumn
 } from "typeorm";
 
-import {IPHistory} from "./ip_history";
-import {Profile} from "./profile";
-import {Message} from "./message";
-import {hashSync} from "bcrypt";
+import {Experience} from "./experience";
 
 /**
  *  Class representing user table
@@ -32,29 +29,15 @@ export class User extends BaseEntity {
 	@Column('text')
 	email: string;
 
-	@Column({type: "text", default: hashSync("password", 2)})
-	password!: string;
+	@Column('text')
+	sub: string;
 
-	// IPHistory
-	@OneToMany((type) => IPHistory, (ip: IPHistory) => ip.user)
-	ips: Relation<IPHistory[]>;
+	@Column('text')
+	picture: string;
 
-	// Profile
-	@OneToMany((type) => Profile, (p: Profile) => p.user)
-	profiles: Relation<Profile[]>;
-
-	// Message - Sender
-	@OneToMany((type) => Message, (ms: Message) => ms.sender)
-	sent: Relation<Message[]>;
-
-	// Message - Recipient
-	@OneToMany((type) => Message, (mr: Message) => mr.recipient)
-	inbox: Relation<Message[]>;
-
-	@Column({
-		default: 0
-	})
-	badwords!: number;
+	// Experience
+	@OneToMany((type) => Experience, (e: Experience) => e.user)
+	experience: Relation<Experience[]>;
 
 	@CreateDateColumn()
 	created_at: string;
