@@ -6,13 +6,8 @@ import Footer from './components/Footer';
 import Home from "./pages/Home";
 import AddExperience from "./pages/AddExperience";
 import {httpClient, updateAxios} from "./services/HttpService";
-import Cookies from 'js-cookie';
 
 function App() {
-    // const value = document.cookie.split("=")[1];
-    const value = Cookies.get('userInfo') ;`    `
-    console.log('cookie', (value?.replaceAll('\\', '')));
-    // await updateAxios
     useEffect( () => {
 		// Reminder that useEffect itself CANNOT be async!
 		const fetchMatches = async() => {
