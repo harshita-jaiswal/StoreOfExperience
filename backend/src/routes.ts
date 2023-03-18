@@ -1,10 +1,7 @@
 /** @module Routes */
-import cors from "cors";
 import {FastifyInstance, FastifyReply, FastifyRequest, RouteShorthandOptions} from "fastify";
 import {User} from "./db/models/user";
-import {IPHistory} from "./db/models/ip_history";
-import {Profile} from "./db/models/profile";
-import {ILike, LessThan, Not} from "typeorm";
+import {Experience} from "./db/models/experience";
 
 /**
  * App plugin where we construct our routes
@@ -12,76 +9,137 @@ import {ILike, LessThan, Not} from "typeorm";
  */
 export async function experience_routes(app: FastifyInstance): Promise<void> {
 
-	// Middleware
-	// TODO: Refactor this in favor of fastify-cors
-	app.use(cors());
 
 	/**
 	 * Route replying to /test path for test-testing
 	 * @name get/test
 	 * @function
 	 */
-	app.get("/test", async (request: FastifyRequest, reply: FastifyReply) => {
+	app.get("/test", async (request: any, reply: FastifyReply) => {
 		reply.send("GET Test");
 	});
 
+
 	/**
-	 * Route serving login form.
-	 * @name get/users
+	 * Route allowing authentication of a existing user & creating a new user.
+	 * @name get/authenticate
 	 * @function
 	 */
-	app.get("/users", async (request: FastifyRequest, reply: FastifyReply) => {
+	app.get("/authenticate", {
+		onRequest: [app.auth]
+	}, async (req: any, reply) => {
+		const {name, picture, email, sub } = req.user
+		try {
+
+			let theUser = await app.db.user.findOneBy({sub});
+
+			if (theUser) {
+				// User has authenticated successfully!
+				const token = app.jwt.sign({email, id: theUser.id});
+				await reply.send('EXISTING_USER');
+			} else {
+				const user = new User();
+				user.name = name;
+				user.email = email;
+				user.picture = picture;
+				user.sub = sub;
+				await user.save();
+				await reply.status(200)
+					.send(JSON.stringify({user}));
+			}
+		} catch (err) {
+			app.log.error(err);
+			await reply.status(500)
+				.send("Error: " + err);
+		}
+	});
+
+
+	/**
+	 * Route to fetch user detail.
+	 * @name get/user
+	 * @function
+	 */
+	app.get("/user",{
+		onRequest: [app.auth]
+	}, async (request: any, reply: FastifyReply) => {
 		// This will return all users along with their associated profiles and ip histories via relations
 		// https://typeorm.io/find-options
-		let users = await app.db.user.find({
+		let user = await app.db.user.find({
 			// This allows you to define which fields appear/do not appear in your result.
 			select: {
 				id: true,
 				name: true,
 				email: true,
+				picture: true,
 				updated_at: true,
 				created_at: false,
 			},
+			where: {
+				sub: request.user.sub
+			},
 			// This defines which of our OneToMany/ManyToMany relations we want to return along with each user
 			relations: {
-				profiles: true,
-				ips: {
-					// We don't need to return user as a part of ip_history because we already know the user
-					user: false
-				},
-			},
-			where: {
-				// This will filter our results only to users with an id less than 70.  How cute is this?!?
-				id: LessThan(70),
-				profiles: {
-					// People who name their dog this deserve to be left out, and people naming other species this definitely do
-					// No offense, people with pets named spot
-					name: Not(ILike("spot")),
-				}
+				experience: true,
 			}
 		});
-		reply.send(users);
+		reply.send(...user);
 	});
 
-	// CRUD impl for users
-	// Create new user
 
-	// Appease fastify gods
-	const post_users_opts: RouteShorthandOptions = {
+	/**
+	 * Create a new message between given sender and recipient
+	 * @name post/add-experience
+	 * @function
+	 * @param {string} title - experience title
+	 * @param {string} experience - experience description
+	 * @param {string} date - date of experience
+	 * @param {string} image - images
+	 * @returns {IPostExperienceResponse} experience used to create experience
+	 */
+	app.post<{
+		Body: {
+			title: string,
+			date: string,
+			experience: string,
+			image: string,
+			userId: number
+		},
+		Reply: IPostExperienceResponse
+	}>("/add-experience", {
+		onRequest: [app.auth]
+		}, async (req: any, reply: FastifyReply) => {
+			const {title, date, experience, image, userId} = req.body;
+
+			const newExperience = new Experience();
+			newExperience.title = title;
+			newExperience.date = date;
+			newExperience.experience = experience;
+			newExperience.image = image;
+			newExperience.user = userId;
+			newExperience.sub = req.user.sub;
+			await newExperience.save();
+			await reply.send(JSON.stringify(newExperience));
+	});
+
+
+	const post_experience_opts: RouteShorthandOptions = {
 		schema: {
 			body: {
 				type: 'object',
 				properties: {
-					name: {type: 'string'},
-					email: {type: 'string'}
+					title: {type: 'string'},
+					experience: {type: 'string'},
+					date: {type: 'string'},
+					sub: {type: 'string'},
+					image: {type: 'string'},
 				}
 			},
 			response: {
 				200: {
 					type: 'object',
 					properties: {
-						user: {type: 'object'},
-						ip_address: {type: 'string'}
+						experience: {type: 'object'},
 					}
 				}
 			}
@@ -89,106 +147,40 @@ export async function experience_routes(app: FastifyInstance): Promise<void> {
 	};
 
 	/**
-	 * Route allowing creation of a new user.
-	 * @name post/users
+	 * Get experience detail.
+	 * @name get/experience/:experienceId
 	 * @function
-	 * @param {string} name - user's full name
-	 * @param {string} email - user's email address
-	 * @returns {IPostUsersResponse} user and IP Address used to create account
+	 * @param {number} experienceId - experience id
+	 * @returns experience detail
 	 */
-	app.post<{
-		Body: IPostUsersBody,
-		Reply: IPostUsersResponse
-	}>("/users", post_users_opts, async (req, reply: FastifyReply) => {
+	app.get("/experience/:experienceId", {
+		onRequest: [app.auth]
+		}, async (req: any, reply: FastifyReply) => {
+			const experienceId = req.params.experienceId;
 
-		const {name, email} = req.body;
-
-		const user = new User();
-		user.name = name;
-		user.email = email;
-
-		const ip = new IPHistory();
-		ip.ip = req.ip;
-		ip.user = user;
-		// transactional, transitively saves user to users table as well IFF both succeed
-		await ip.save();
-
-		//manually JSON stringify due to fastify bug with validation
-		// https://github.com/fastify/fastify/issues/4017
-		await reply.send(JSON.stringify({user, ip_address: ip.ip}));
+			let exp = await app.db.experience.find({
+				where: {
+					id: experienceId,
+				},
+			});
+			reply.send(...exp);
 	});
 
-
-	// PROFILE Route
-	/**
-	 * Route listing all current profiles
-	 * @name get/profiles
-	 * @function
-	 */
-	app.get("/profiles", async (req, reply) => {
-		let profiles = await app.db.profile.find();
-		reply.send(profiles);
-	});
-
-
-	app.post("/profiles", async (req: any, reply: FastifyReply) => {
-
-		const {name} = req.body;
-
-		const myUser = await app.db.user.findOneByOrFail({});
-
-	  const newProfile = new Profile();
-	  newProfile.name = name;
-		newProfile.picture = "ph.jpg";
-		newProfile.user = myUser;
-
-		await newProfile.save();
-
-		//manually JSON stringify due to fastify bug with validation
-		// https://github.com/fastify/fastify/issues/4017
-		await reply.send(JSON.stringify(newProfile));
-	});
-
-	app.delete("/profiles", async (req: any, reply: FastifyReply) => {
-
-		const myProfile = await app.db.profile.findOneByOrFail({});
-		let res = await myProfile.remove();
-
-		//manually JSON stringify due to fastify bug with validation
-		// https://github.com/fastify/fastify/issues/4017
-		await reply.send(JSON.stringify(res));
-	});
-
-	app.put("/profiles", async(request, reply) => {
-		const myProfile = await app.db.profile.findOneByOrFail({});
-
-
-		myProfile.name = "APP.PUT NAME CHANGED";
-		let res = await myProfile.save();
-
-		//manually JSON stringify due to fastify bug with validation
-		// https://github.com/fastify/fastify/issues/4017
-		await reply.send(JSON.stringify(res));
-	});
-
+	app.get('/decode', async (request: any, reply: FastifyReply) => {
+		const auth = request.headers.authorization;
+		const token = auth.split(' ')[1]
+	
+		await app.jwt.verify(token, (err: any, decoded: any) => {
+		  if (err) app.log.error(err)
+		  app.log.info('username : ' + decoded.username)
+		  reply.send({ foo: decoded })
+		})
+	  })
 }
 
-// Appease typescript request gods
-interface IPostUsersBody {
-	name: string,
-	email: string,
-}
-
-/**
- * Response type for post/users
- */
-export type IPostUsersResponse = {
+export type IPostExperienceResponse = {
 	/**
-	 * User created by request
+	 * Experience created by request
 	 */
-	user: User,
-	/**
-	 * IP Address user used to create account
-	 */
-	ip_address: string
+	experience: Experience
 }

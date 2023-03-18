@@ -3,10 +3,10 @@ import "reflect-metadata";
 import fp from "fastify-plugin";
 import {DataSource, Repository} from "typeorm";
 import {User} from "../db/models/user";
-import {IPHistory} from "../db/models/ip_history";
 import {FastifyInstance, FastifyPluginOptions} from "fastify";
 import {AppDataSource} from "../db/datasources/dev_datasource";
-import {Profile} from "../db/models/profile";
+import {Experience} from "../db/models/experience";
+
 
 /** This is AWESOME - we're telling typescript we're adding our own "thing" to base 'app', so we get FULL IDE/TS support */
 declare module 'fastify' {
@@ -25,8 +25,7 @@ declare module 'fastify' {
 
 interface DBConfigOpts {
 	user: Repository<User>,
-	ip: Repository<IPHistory>,
-	profile: Repository<Profile>,
+	experience: Repository<Experience>,
 	connection: DataSource,
 }
 
@@ -47,9 +46,7 @@ const DbPlugin = fp(async (app: FastifyInstance, options: FastifyPluginOptions, 
 	app.decorate("db", {
 		connection: dataSourceConnection,
 		user: dataSourceConnection.getRepository(User),
-		ip: dataSourceConnection.getRepository(IPHistory),
-		profile: dataSourceConnection.getRepository(Profile)
-
+		experience: dataSourceConnection.getRepository(Experience),
 	});
 
 	done();

@@ -8,8 +8,9 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 /** @module Models/Profile */
-import { BaseEntity, Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, CreateDateColumn, Entity, OneToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { User } from "./user.js";
+import { Match } from "./match.js";
 /**
  * Profile model - This is for interacting with the profile table
  * Each profile corresponds to exactly 1 pet owned by a User.
@@ -20,6 +21,8 @@ let Profile = class Profile extends BaseEntity {
     name;
     picture;
     user;
+    matches;
+    matchedBy;
     created_at;
 };
 __decorate([
@@ -36,13 +39,27 @@ __decorate([
 ], Profile.prototype, "picture", void 0);
 __decorate([
     ManyToOne((type) => User, (user) => user.profiles, {
-        //adding an IPHistory will also add associated User if it is new, somewhat useless in this example
         cascade: true,
-        // if we delete a User, also delete their IP History
         onDelete: "CASCADE"
     }),
     __metadata("design:type", Object)
 ], Profile.prototype, "user", void 0);
+__decorate([
+    OneToMany((type) => Match, (match) => match.matcher, {
+        cascade: true,
+        onDelete: "CASCADE"
+    }),
+    __metadata("design:type", Object)
+], Profile.prototype, "matches", void 0);
+__decorate([
+    OneToMany((type) => Match, (match) => match.matchee, {
+        //adding an IPHistory will also add associated User if it is new, somewhat useless in this example
+        cascade: true,
+        // if we delete a profile, remove their matches as well
+        onDelete: "CASCADE"
+    }),
+    __metadata("design:type", Object)
+], Profile.prototype, "matchedBy", void 0);
 __decorate([
     CreateDateColumn(),
     __metadata("design:type", String)

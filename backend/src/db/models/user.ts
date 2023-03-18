@@ -10,8 +10,7 @@ import {
 	UpdateDateColumn
 } from "typeorm";
 
-import {IPHistory} from "./ip_history";
-import {Profile} from "./profile";
+import {Experience} from "./experience";
 
 /**
  *  Class representing user table
@@ -30,13 +29,15 @@ export class User extends BaseEntity {
 	@Column('text')
 	email: string;
 
-	// IPHistory
-	@OneToMany((type) => IPHistory, (ip: IPHistory) => ip.user)
-	ips: Relation<IPHistory[]>;
+	@Column('text')
+	sub: string;
 
-	// Profile
-	@OneToMany((type) => Profile, (p: Profile) => p.user)
-	profiles: Relation<Profile[]>;
+	@Column('text')
+	picture: string;
+
+	// Experience
+	@OneToMany((type) => Experience, (e: Experience) => e.user)
+	experience: Relation<Experience[]>;
 
 	@CreateDateColumn()
 	created_at: string;

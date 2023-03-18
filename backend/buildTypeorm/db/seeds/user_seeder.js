@@ -21,6 +21,8 @@ export class UserSeeder extends Seeder {
             let user = new User();
             user.name = "user" + i;
             user.email = "user" + i + "@email.com";
+            user.sub = 'sub | user' + i;
+            user.picture = "https://randomfox.ca/images/9.jpg";
             await user.save();
             app.log.info("Seeded user " + i);
         }

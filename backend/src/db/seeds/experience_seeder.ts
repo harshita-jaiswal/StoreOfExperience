@@ -2,7 +2,7 @@
 
 import {faker} from "@faker-js/faker";
 import {Seeder} from "../../lib/seed_manager";
-import {Profile} from "../models/profile";
+import {Experience} from "../models/experience";
 import {User} from "../models/user";
 import {FastifyInstance} from "fastify";
 
@@ -13,7 +13,7 @@ faker.seed(100);
 /**
  * Seeds the ip_history table
  */
-export class ProfileSeeder extends Seeder {
+export class ExperienceSeeder extends Seeder {
 
 	/**
 	 * Runs the Profile table's seed
@@ -22,24 +22,26 @@ export class ProfileSeeder extends Seeder {
 	 * @returns {Promise<void>}
 	 */
 	override async run(app: FastifyInstance) {
-		app.log.info("Seeding IP Histories...");
+		app.log.info("Seeding Experience...");
 		// Remove everything in there currently
-		await app.db.profile.delete({});
+		await app.db.experience.delete({});
 		// get our users and make each a few IPs
 		const users = await User.find();
 
 		for (let i = 0; i < users.length; i++) {
-			let newProfile = new Profile();
-			newProfile.user = users[i];
-			newProfile.name = "Spot";
+			let newExperience = new Experience();
+			newExperience.title = 'experience' + users[i];
+			newExperience.experience = "Spot";
+            newExperience.sub = users[i].sub;
+            newExperience.date = 'Date.now()';
 			// Todo: Get rid of placeholder hard coded image link
-			newProfile.picture = "http://placeholder.com/mypic.jpeg";
-			await newProfile.save();
+			newExperience.image = "https://randomfox.ca/images/9.jpg";
+			await newExperience.save();
 			app.log.info("Finished seeding user: " + i);
 		}
 	}
 }
 
-export const ProfileSeed = new ProfileSeeder();
+export const ExperienceSeed = new ExperienceSeeder();
 
  

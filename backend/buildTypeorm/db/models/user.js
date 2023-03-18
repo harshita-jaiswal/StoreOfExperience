@@ -9,8 +9,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 /** @module Models/User */
 import { BaseEntity, Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
-import { IPHistory } from "./ip_history.js";
-import { Profile } from "./profile.js";
+import { Experience } from "./experience.js";
 /**
  *  Class representing user table
  */
@@ -18,10 +17,10 @@ let User = class User extends BaseEntity {
     id;
     name;
     email;
-    // IPHistory
-    ips;
-    // Profile
-    profiles;
+    sub;
+    picture;
+    // Experience
+    experience;
     created_at;
     updated_at;
 };
@@ -41,13 +40,17 @@ __decorate([
     __metadata("design:type", String)
 ], User.prototype, "email", void 0);
 __decorate([
-    OneToMany((type) => IPHistory, (ip) => ip.user),
-    __metadata("design:type", Object)
-], User.prototype, "ips", void 0);
+    Column('text'),
+    __metadata("design:type", String)
+], User.prototype, "sub", void 0);
 __decorate([
-    OneToMany((type) => Profile, (p) => p.user),
+    Column('text'),
+    __metadata("design:type", String)
+], User.prototype, "picture", void 0);
+__decorate([
+    OneToMany((type) => Experience, (e) => e.user),
     __metadata("design:type", Object)
-], User.prototype, "profiles", void 0);
+], User.prototype, "experience", void 0);
 __decorate([
     CreateDateColumn(),
     __metadata("design:type", String)

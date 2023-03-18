@@ -3,11 +3,14 @@
     <meta charset="utf-8" />
     <title>Auth0 Example</title>
   </head>
-  <!-- <script>
+  <script>
     window.addEventListener('load', function(event) {
-      window.location.replace('/login')
+      // var testCookie = document.cookie.match(/^(.*;)?\s*session\s*=\s*[^;]+(.*)?$/)
+      console.log('testCookie', document.cookie.indexOf('userInfo'));
+      document.cookie.indexOf('userInfo') > -1 ? window.location.href('http://localhost://127.0.0.1:5137') :""
+      // if(session.userinfo)
   });
-  </script> -->
+  </script>
   <body>
     {% if session %}
     <h1>Welcome {{session.userinfo.name}}!</h1>
