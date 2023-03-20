@@ -19,7 +19,6 @@ export const httpClient = axios.create({
 
 // This is called by AuthService.handleLogin/handleLogout
 export const updateAxios = async (token: string) => {
-	console.log("In update axios");
 	httpClient.interceptors.request.use(
 		async config => {
 
