@@ -10,6 +10,7 @@ import logger from "./lib/logger";
 import {experience_routes} from "./routes";
 import DbPlugin from "./plugins/database";
 import {AuthPlugin} from "./plugins/auth";
+import multipart from '@fastify/multipart';
 import cors from "@fastify/cors";
 
 /**
@@ -50,6 +51,8 @@ export async function buildApp(useLogging: boolean) {
 			root: path.join(getDirName(import.meta), "../public"),
 			prefix: "/public/",
 		});
+
+		await app.register(multipart);
 
 		// MUST COME BEFORE OUR ROUTES because auth needs to be defined by then!
 		app.log.info("Creating authorization framework...");
