@@ -18,15 +18,35 @@ export const AuthProvider = ({children}) => {
 	const navigate = useNavigate();
 	const [token, setToken] = useState<string>(initialToken!);
 	const [loader, isLoading] = useState<boolean>(false);
+	const [userInfo, setUserInfo] = useState<any>(null);
 
 	useEffect( () => {
 		const updateAuth = async() => {
 			await updateAxios(token);
 			navigate("/home");
 		};
+		const combineAuth = async() => {
+			const user = await Promise.all([
+				httpClient.get('/authenticate'),
+				httpClient.get('/user')
+			]).then(response => {
+				console.log(response);
+				let data = {
+					authenticate: response[0].data,
+					userInfo: response[1].data
+				}
+				return data;
+			  });
+			// const user = await httpClient.get('/authenticate');
+			console.log('user---', user)
+			setUserInfo(user.userInfo);
+			return user;
+		}
 		if(token?.length) {
 			updateAuth()
 			.catch(console.error);
+			combineAuth()
+				.catch(console.error)
 		}
 	},[token]);
 	
@@ -60,6 +80,7 @@ export const AuthProvider = ({children}) => {
 	const useAuthContextPackage = {
 		token,
 		loader,
+		userInfo,
 		// handleLogin,
 		handleLogout,
 		initLoginOrLogout

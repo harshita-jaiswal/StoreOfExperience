@@ -13,6 +13,7 @@ export type ProfileType = {
 export type AuthContextProps = {
 	token: string | null,
 	loader: boolean,
+	userInfo: any | null,
 	// handleLogin: (email: string, password: string) => Promise<void>,
 	handleLogout: () => void,
 	initLoginOrLogout: (endpoint: string) => void,

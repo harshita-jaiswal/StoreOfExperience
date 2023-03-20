@@ -3,11 +3,11 @@ import './index.scss';
 
 interface CardProps {
     place: string,
-    description: string,
+    experience: string,
     imgUrl: string
  }
 
-export default function Card({place, imgUrl, description}: CardProps) {
+export default function Card({place, imgUrl, experience}: CardProps) {
     const divStyle = {
         backgroundImage: 'url(' + imgUrl + ')',
       };
@@ -17,7 +17,7 @@ export default function Card({place, imgUrl, description}: CardProps) {
          <div className='Card__content'>
             <div className='Card__content-place'>{place}</div>
             <div className='Card__content-desc'>
-                {description}
+                {experience}
             </div>
          </div>
        </div>
@@ -26,6 +26,6 @@ export default function Card({place, imgUrl, description}: CardProps) {
 
 Card.propTypes = {
     place: PropTypes.string,
-    description: PropTypes.string,
+    experience: PropTypes.string,
     imgUrl: PropTypes.string
   };
