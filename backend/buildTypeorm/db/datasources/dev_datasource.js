@@ -1,14 +1,14 @@
 // We need dotenv here because our datasources are processed from CLI in addition to vite
 import dotenv from "dotenv";
-import { DataSource } from 'typeorm';
+import TypeORM from 'typeorm';
 // Similar reasoning as above, we need to add the file extensions to this file's imports for CLI usage
 import { User } from "../models/user.js";
 import { Experience } from "../models/experience.js";
-import { initialize1679104994810 } from "../migrations/1679104994810-initialize.js";
+import { initialize1679431901208 } from "../migrations/1679431901208-initialize.js";
 dotenv.config();
 // @ts-ignore 
 const env = process.env;
-export const AppDataSource = new DataSource({
+export const AppDataSource = new TypeORM.DataSource({
     type: "postgres",
     host: env.VITE_DB_HOST,
     port: Number(env.VITE_DB_PORT),
@@ -21,7 +21,7 @@ export const AppDataSource = new DataSource({
         Experience
     ],
     migrations: [
-        initialize1679104994810
+        initialize1679431901208
     ],
     // DANGER DANGER our convenience will nuke production data!
     synchronize: false

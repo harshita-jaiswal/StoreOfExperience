@@ -29,20 +29,25 @@ export async function buildApp(useLogging: boolean) {
 
 	try {
 
+		// await app.register(cors, {
+		// 	origin: (origin, cb) => {
+		// 		// If we're in dev mode, no CORS necessary, let *everything* pass
+		// 		if (import.meta.env.DEV) {
+		// 			cb(null, true);
+		// 			return;  }
+		// 		const hostname = new URL(origin).hostname;
+		// 		// Otherwise check to see if hostnames match, or are local connections and allow those too
+		// 		if (hostname === "localhost" || hostname === '127.0.0.1' || hostname === import.meta.env.VITE_IP_ADDR) {
+		// 			//  Request from localhost will pass
+		// 			cb(null, true);
+		// 			return;  }
+		// 		// Generate an error on other origins, disabling access
+		// 		cb(new Error("Not allowed"), false);
+		// 	}
+		// });
 		await app.register(cors, {
 			origin: (origin, cb) => {
-				// If we're in dev mode, no CORS necessary, let *everything* pass
-				if (import.meta.env.DEV) {
-					cb(null, true);
-					return;  }
-				const hostname = new URL(origin).hostname;
-				// Otherwise check to see if hostnames match, or are local connections and allow those too
-				if (hostname === "localhost" || hostname === '127.0.0.1' || hostname === import.meta.env.VITE_IP_ADDR) {
-					//  Request from localhost will pass
-					cb(null, true);
-					return;  }
-				// Generate an error on other origins, disabling access
-				cb(new Error("Not allowed"), false);
+				cb(null, true);
 			}
 		});
 

@@ -1,47 +1,38 @@
 /** @module Models/User */
-import {
-	BaseEntity,
-	Column,
-	CreateDateColumn,
-	Entity,
-	OneToMany,
-	PrimaryGeneratedColumn,
-	Relation,
-	UpdateDateColumn
-} from "typeorm";
+import TypeORM from "typeorm";
 
 import {Experience} from "./experience";
 
 /**
  *  Class representing user table
  */
-@Entity({name: "users"})
-export class User extends BaseEntity {
-	@PrimaryGeneratedColumn()
+@TypeORM.Entity({name: "users"})
+export class User extends TypeORM.BaseEntity {
+	@TypeORM.PrimaryGeneratedColumn()
 	id: number;
 
-	@Column({
+	@TypeORM.Column({
 		length: 100,
 		type: "varchar"
 	})
 	name: string;
 
-	@Column('text')
+	@TypeORM.Column('text')
 	email: string;
 
-	@Column('text')
+	@TypeORM.Column('text')
 	sub: string;
 
-	@Column('text')
+	@TypeORM.Column('text')
 	picture: string;
 
 	// Experience
-	@OneToMany((type) => Experience, (e: Experience) => e.user)
-	experience: Relation<Experience[]>;
+	@TypeORM.OneToMany((type) => Experience, (e: Experience) => e.user)
+	experience: TypeORM.Relation<Experience[]>;
 
-	@CreateDateColumn()
+	@TypeORM.CreateDateColumn()
 	created_at: string;
 
-	@UpdateDateColumn()
+	@TypeORM.UpdateDateColumn()
 	updated_at: string;
 }

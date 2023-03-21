@@ -30,7 +30,6 @@ export const AuthPlugin = fp(async function(fastify: FastifyInstance, opts: Fast
 		}
 	  })
 	fastify.decorate("auth", async function(request: FastifyRequest, reply: FastifyReply) {
-		console.log('request------', request.jwtVerify());
 		try {
 			// This is the thing we added in our interface above
 			await request.jwtVerify();

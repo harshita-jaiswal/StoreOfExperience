@@ -8,24 +8,27 @@ from urllib.parse import quote_plus, urlencode
 from authlib.integrations.flask_client import OAuth
 from dotenv import find_dotenv, load_dotenv
 from flask import Flask, redirect, render_template, session, url_for, request, make_response, jsonify
-from flask_cors import CORS, cross_origin
+# from flask_cors import CORS, cross_origin
+
 
 ENV_FILE = find_dotenv()
 if ENV_FILE:
     load_dotenv(ENV_FILE)
 
-print('env---', env)
+
+print("url---", ENV_FILE, env);
 
 app = Flask(__name__)
-cors = CORS(app, resources={r"/*": {"origins": "*"}})
+# cors = CORS(app, resources={r"/*": {"origins": "*"}})
 app.secret_key = env.get("APP_SECRET_KEY")
 
 app.config.update(
     SESSION_COOKIE_SECURE=False,
 )
 
-
+FE_URL = f'http://{env.get("FE_HOST")}:{env.get("FE_PORT")}'
 oauth = OAuth(app)
+
 
 oauth.register(
     "auth0",
@@ -63,13 +66,15 @@ def callback():
     # print(json.dumps(token, indent=4).userinfo)
     # val = json.loads(userInfo)
     # resp = make_response(redirect(env.get(FE_URL)))
-    resp = make_response(redirect("http://127.0.0.1:5174")) # add url in auth0 configuration in callback urls
+    resp = make_response(redirect(FE_URL)) # add url in auth0 configuration in callback urls
     # resp = make_response(redirect("/"))
     # userInfo = val['userinfo']
+    print('resp---', resp)
     # print('test----', val['userinfo']['sub'], userInfo['sub'])
     # resp.set_cookie('user_id', value=val['userinfo']['sub'])
     # resp.set_cookie('token', token['id_token'], path="/", domain="http://127.0.0.1:5174")
     resp.set_cookie('token', token['id_token'])
+    print('resp---', resp, FE_URL)
     return resp 
     # print(val['userinfo']['sub'])
     # session["detail"] = userInfo
@@ -100,7 +105,7 @@ def logout():
         + "/v2/logout?"
         + urlencode(
             {
-                "returnTo": "http://127.0.0.1:5174", # add url in auth0 configuration in logout urls
+                "returnTo": FE_URL, # add url in auth0 configuration in logout urls
                 "client_id": env.get("AUTH0_CLIENT_ID"),
             },
             quote_via=quote_plus,

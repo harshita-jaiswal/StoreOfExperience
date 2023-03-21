@@ -8,6 +8,7 @@ import logger from "./lib/logger.js";
 import { experience_routes } from "./routes.js";
 import DbPlugin from "./plugins/database.js";
 import { AuthPlugin } from "./plugins/auth.js";
+import multipart from '@fastify/multipart';
 import cors from "@fastify/cors";
 /**
  * This is our main "Create App" function.  Note that it does NOT start the server, this only creates it
@@ -23,22 +24,25 @@ export async function buildApp(useLogging) {
         })
         : Fastify({ logger: false });
     try {
+        // await app.register(cors, {
+        // 	origin: (origin, cb) => {
+        // 		// If we're in dev mode, no CORS necessary, let *everything* pass
+        // 		if (import.meta.env.DEV) {
+        // 			cb(null, true);
+        // 			return;  }
+        // 		const hostname = new URL(origin).hostname;
+        // 		// Otherwise check to see if hostnames match, or are local connections and allow those too
+        // 		if (hostname === "localhost" || hostname === '127.0.0.1' || hostname === import.meta.env.VITE_IP_ADDR) {
+        // 			//  Request from localhost will pass
+        // 			cb(null, true);
+        // 			return;  }
+        // 		// Generate an error on other origins, disabling access
+        // 		cb(new Error("Not allowed"), false);
+        // 	}
+        // });
         await app.register(cors, {
             origin: (origin, cb) => {
-                // If we're in dev mode, no CORS necessary, let *everything* pass
-                if (import.meta.env.DEV) {
-                    cb(null, true);
-                    return;
-                }
-                const hostname = new URL(origin).hostname;
-                // Otherwise check to see if hostnames match, or are local connections and allow those too
-                if (hostname === "localhost" || hostname === '127.0.0.1' || hostname === import.meta.env.VITE_IP_ADDR) {
-                    //  Request from localhost will pass
-                    cb(null, true);
-                    return;
-                }
-                // Generate an error on other origins, disabling access
-                cb(new Error("Not allowed"), false);
+                cb(null, true);
             }
         });
         // add static file handling
@@ -46,6 +50,7 @@ export async function buildApp(useLogging) {
             root: path.join(getDirName(import.meta), "../public"),
             prefix: "/public/",
         });
+        await app.register(multipart);
         // MUST COME BEFORE OUR ROUTES because auth needs to be defined by then!
         app.log.info("Creating authorization framework...");
         await app.register(AuthPlugin);

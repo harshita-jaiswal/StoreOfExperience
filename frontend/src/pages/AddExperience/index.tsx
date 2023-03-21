@@ -14,7 +14,7 @@ export enum SubmissionStatus {
 const AddExperience = () => {
     const {userInfo} = useAuth();
     const [image, setImage] = useState();
-    const [toastVisibility, setToastVisibility] = useState<boolean>(true);
+    const [toastVisibility, setToastVisibility] = useState<boolean>(false);
 
     const [expFormData, setExpFormData] = useState({
         title: "",
@@ -25,7 +25,6 @@ const AddExperience = () => {
     const [submitted, setSubmitted] = useState(SubmissionStatus.NotSubmitted);
 
     useEffect(()=> {
-        console.log('img----', image);
         setExpFormData((prev) => {
             return { ...prev, image };
           });
@@ -44,28 +43,11 @@ const AddExperience = () => {
 		formData.append('file', expFormData.image);
 		// @ts-ignore
 		formData.append('fileName', expFormData.image.name);
-		// formData.append('title', expFormData.title);
-		// formData.append('date', expFormData.date);
-		// formData.append('experience', expFormData.Experience);
-		// formData.append('userId', userInfo.id);
-
-        // formData = {...formData, ...expFormData}
-        console.log('submit data---', formData, expFormData)
         const config = {
 			headers: {
 				'content-type': 'multipart/form-data',
 			},
 		};
-		// httpClient.post("/add-experience", formData, config)
-			// .then((response) => {
-			// 	console.log("Got response from upload file:", response.status);
-			// 	if (response.status === 200) {
-			// 		// setSubmitted(SubmissionStatus.SubmitSucceeded);
-			// 	} else {
-			// 		// setSubmitted(SubmissionStatus.SubmitFailed);
-			// 	}
-
-			// });
         Promise.all([
             httpClient.post('/upload-image', formData, config),
             httpClient.post('/add-experience', {

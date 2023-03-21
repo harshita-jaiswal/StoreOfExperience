@@ -7,7 +7,7 @@ import { getModeFromArgs, RunMode } from "./lib/helpers.js";
  * Constructs Fastify instance
  * @param {boolean} useLogging whether to log the server or not
  */
-const app = await buildApp(false);
+const app = await buildApp(true);
 try {
     // Add some DIY seeding to doggr!
     switch (getModeFromArgs()) {
