@@ -34,4 +34,10 @@
         flex: 1;
         margin-top: 2em;
     }
+    &__submit {
+        // width: 80%;
+        margin: 1.25em 0;
+        text-transform: uppercase;
+        text-align: center;
+    }
 }
