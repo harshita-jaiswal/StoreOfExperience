@@ -14,10 +14,12 @@ export enum SubmissionStatus {
 const AddExperience = () => {
     const {userInfo} = useAuth();
     const [image, setImage] = useState();
+    const [toastVisibility, setToastVisibility] = useState<boolean>(true);
+
     const [expFormData, setExpFormData] = useState({
-        Title: "",
-        Date: "",
-        Experience: "",
+        title: "",
+        date: "",
+        experience: "",
         image: null,
       });
     const [submitted, setSubmitted] = useState(SubmissionStatus.NotSubmitted);
@@ -42,10 +44,10 @@ const AddExperience = () => {
 		formData.append('file', expFormData.image);
 		// @ts-ignore
 		formData.append('fileName', expFormData.image.name);
-		formData.append('title', expFormData.Title);
-		formData.append('date', expFormData.Date);
-		formData.append('experience', expFormData.Experience);
-		formData.append('userId', userInfo.id);
+		// formData.append('title', expFormData.title);
+		// formData.append('date', expFormData.date);
+		// formData.append('experience', expFormData.Experience);
+		// formData.append('userId', userInfo.id);
 
         // formData = {...formData, ...expFormData}
         console.log('submit data---', formData, expFormData)
@@ -54,19 +56,43 @@ const AddExperience = () => {
 				'content-type': 'multipart/form-data',
 			},
 		};
-		httpClient.post("/add-experience", formData, config)
-			.then((response) => {
-				console.log("Got response from upload file:", response.status);
-				if (response.status === 200) {
-					// setSubmitted(SubmissionStatus.SubmitSucceeded);
-				} else {
-					// setSubmitted(SubmissionStatus.SubmitFailed);
-				}
+		// httpClient.post("/add-experience", formData, config)
+			// .then((response) => {
+			// 	console.log("Got response from upload file:", response.status);
+			// 	if (response.status === 200) {
+			// 		// setSubmitted(SubmissionStatus.SubmitSucceeded);
+			// 	} else {
+			// 		// setSubmitted(SubmissionStatus.SubmitFailed);
+			// 	}
 
-			});
+			// });
+        Promise.all([
+            httpClient.post('/upload-image', formData, config),
+            httpClient.post('/add-experience', {
+                ...expFormData,
+                Title:"fdjfdjnd",
+                image: expFormData.image.name
+            })
+        ]).then((response) => {
+            console.log("Got response from upload file:", response);
+            setToastVisibility(true)
+            if (response.length === 2) {
+                setSubmitted(SubmissionStatus.SubmitSucceeded);
+            } else {
+                setSubmitted(SubmissionStatus.SubmitFailed);
+            }
+            setTimeout(() => {
+                setToastVisibility(false)
+              }, 3000);
+        });
     }
     return (
         <div className="AddExperience">
+            <div id="toast" className={"AddExperience__toast"  + (toastVisibility ? ' show' : ' hide')}>
+                {
+                    submitted === SubmissionStatus.SubmitFailed ? "Adding Experience Failed!" : "Experience Added Successfully!" 
+                }
+            </div>
            <div className="AddExperience__left">
                 <div className="AddExperience__left-container">
                     <ImageUpload image={image} setImage={setImage} />
@@ -77,22 +103,22 @@ const AddExperience = () => {
                     type="text"
                     onChange={handleChange}
                     placeholder="Title"
-                    name="Title"
-                    value={expFormData.Title}
+                    name="title"
+                    value={expFormData.title}
                     />
                 <input className="AddExperience__input"
                     type="date"
                     onChange={handleChange}
                     placeholder="date"
-                    name="Date"
-                    value={expFormData.Date}
+                    name="date"
+                    value={expFormData.date}
                 />
                  <textarea className="AddExperience__input"
                     type="textarea"
                     onChange={handleChange}
                     placeholder="Experience"
-                    name="Experience"
-                    value={expFormData.Experience}
+                    name="experience"
+                    value={expFormData.experience}
                     rows={12}
                     // maxLength = {150}
                 />

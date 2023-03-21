@@ -2,6 +2,7 @@
 import {FastifyInstance, FastifyReply, FastifyRequest, RouteShorthandOptions} from "fastify";
 import {User} from "./db/models/user";
 import {Experience} from "./db/models/experience";
+import {UploadFileToMinio, GetFileFromMinio} from "./lib/minio";
 
 /**
  * App plugin where we construct our routes
@@ -88,6 +89,29 @@ export async function experience_routes(app: FastifyInstance): Promise<void> {
 
 
 	/**
+	 * Route to experiences.
+	 * @name get/experiences
+	 * @function
+	 */
+	app.get("/experiences", {
+		onRequest: [app.auth]
+		}, async (req: any, reply: FastifyReply) => {
+			const { sub } = req.user
+
+			let theUser = await app.db.user.findOneBy({sub});
+
+			let experiences = await app.db.experience.find({
+				where: {
+					user: {
+						id: theUser?.id
+					}
+				},
+			});
+			reply.send(experiences);
+	});
+
+
+	/**
 	 * Create a new message between given sender and recipient
 	 * @name post/add-experience
 	 * @function
@@ -120,6 +144,34 @@ export async function experience_routes(app: FastifyInstance): Promise<void> {
 			newExperience.sub = req.user.sub;
 			await newExperience.save();
 			await reply.send(JSON.stringify(newExperience));
+	});
+
+	/**
+	 * Create a new message between given sender and recipient
+	 * @name post/upload-image
+	 * @function
+	 */
+	app.post("/upload-image", {
+		onRequest: [app.auth]
+		}, async (req: any, reply: FastifyReply) => {
+			// const {title, date, experience, image, userId} = req.body;
+
+			const data = await req.file();
+			let upload = await UploadFileToMinio(data);
+
+			// let img = await GetFileFromMinio(data.filename);
+			console.log('test-------', data.fields)
+
+			// const newExperience = new Experience();
+			// newExperience.title = data.fields.title?.value;
+			// newExperience.date = data.fields.date?.value;
+			// newExperience.experience = data.fields.experience?.value;
+			// newExperience.image = data.fields.file.filename;
+			// newExperience.user =  data.fields.userId?.value;
+			// newExperience.sub = req.user.sub;
+			// await newExperience.save();
+			// await reply.send(JSON.stringify(newExperience));
+			await reply.send(upload)
 	});
 
 

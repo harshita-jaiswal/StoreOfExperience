@@ -1,8 +1,5 @@
-import {useCallback, useContext, useEffect, useState} from "react";
-import { Link, Route, Routes, useParams, useSearchParams } from 'react-router-dom';
-import React from "react";
 import {AuthContext, useAuth} from "../../services/AuthService";
-import {AuthHttpClient} from "../../services/HttpMicroservice";
+import logo from '../../assets/logo.jpeg'
 import "./index.scss";
 
 export default function Login() {
@@ -10,48 +7,17 @@ export default function Login() {
 	if (!AuthContext) return null;
 
 	const {initLoginOrLogout} = useAuth();
-	// const navigate = useNavigate();
 
-    // let { status } = useParams();
-
-    // useEffect(() => {
-    //     console.log('login page---', status)
-    //     if(status = "success") {
-    //         navigate("/home");
-    //     }
-    // }, [statuss])
-
-	const [email, setEmail] = useState("");
-	const [password, setPassword] = useState("");
-	const [submitFailed, setSubmitFailed] = useState(false);
-
-	const initiateLogin = async (event) => {
-		// event.preventDefault();
-		// handleLogin(email, password);
+	const initiateLogin = async () => {
         initLoginOrLogout("/");
-        // await AuthHttpClient("/");
-        // handleLogin('fdf','fe');
-        // window.location.replace(authServerUrl)
 	};
+    const divStyle = {
+        background: 'no-repeat center/100% url(' + logo + ')',
+      };
 
 	return (
-		<div className="Login">
-            <p>Login Page</p>
-            <p onClick={initiateLogin}>Login</p>
+		<div className="Login" style={divStyle}>
+            <p className="Login__text" onClick={initiateLogin}>Let's Star! Login or Signup</p>
 		</div>
         );
 }
-
-// export function Logout() {
-// 	// @ts-ignore
-// 	const {handleLogout} = useAuth();
-// 	const navigate = useNavigate();
-
-// 	useEffect(() => {
-// 		handleLogout();
-// 		navigate("/");
-// 	})
-
-// 	return(<></>)
-// }
-

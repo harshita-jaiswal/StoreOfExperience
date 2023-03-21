@@ -37,6 +37,8 @@
         }
         &-desc {
             padding: 0 0.8em 0.8em;
+            max-height: 70%;
+            overflow: hidden;
         }
     }
 }
