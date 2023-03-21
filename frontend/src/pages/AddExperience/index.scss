@@ -7,6 +7,22 @@
     flex-direction: column;
     position: relative;
     max-width: 100%;
+    &__toast {
+        /* width: auto; */
+        padding: 1em;
+        box-shadow: 0 0 10px rgb(0 0 0 / 20%);
+        position: fixed;
+        justify-content: center;
+        display: flex;
+        align-items: center;
+        text-align: center;
+        margin: 0 auto;
+        right: 80px;
+        top: 40px;
+        z-index: 100;
+        background: #ffffff;
+        border-radius: 5px;
+    }
     &__input {
         display: block;
         all: unset;
@@ -34,4 +50,39 @@
         flex: 1;
         margin-top: 2em;
     }
+    &__submit {
+        // width: 80%;
+        margin: 1.25em 0;
+        text-transform: uppercase;
+        text-align: center;
+    }
+    .hide {
+      display: none;
+    }
+    .show {
+        visibility: visible; 
+        -webkit-animation: fadein 0.5s, fadeout 0.5s 3s;
+        animation: fadein 0.5s, fadeout 0.5s 3s;
+      }
+      
+      /* Animations to fade the snackbar in and out */
+      @-webkit-keyframes fadein {
+        from {right: 0; opacity: 0;}
+        to {right: 80px; opacity: 1;}
+      }
+      
+      @keyframes fadein {
+        from {right: 0; opacity: 0;}
+        to {right: 80px; opacity: 1;}
+      }
+      
+      @-webkit-keyframes fadeout {
+        from {right: 80px; opacity: 1;}
+        to {right: 0; opacity: 0;}
+      }
+      
+      @keyframes fadeout {
+        from {right: 80px; opacity: 1;}
+        to {right: 0; opacity: 0;}
+      }
 }

@@ -2,6 +2,7 @@
 import {FastifyInstance, FastifyReply, FastifyRequest, RouteShorthandOptions} from "fastify";
 import {User} from "./db/models/user";
 import {Experience} from "./db/models/experience";
+import {UploadFileToMinio, GetFileFromMinio} from "./lib/minio";
 
 /**
  * App plugin where we construct our routes
@@ -31,7 +32,8 @@ export async function experience_routes(app: FastifyInstance): Promise<void> {
 		const {name, picture, email, sub } = req.user
 		try {
 
-			let theUser = await app.db.user.findOneBy({sub});
+			
+			const theUser = await retrieveUserId(app, sub);
 
 			if (theUser) {
 				// User has authenticated successfully!
@@ -63,10 +65,7 @@ export async function experience_routes(app: FastifyInstance): Promise<void> {
 	app.get("/user",{
 		onRequest: [app.auth]
 	}, async (request: any, reply: FastifyReply) => {
-		// This will return all users along with their associated profiles and ip histories via relations
-		// https://typeorm.io/find-options
 		let user = await app.db.user.find({
-			// This allows you to define which fields appear/do not appear in your result.
 			select: {
 				id: true,
 				name: true,
@@ -88,6 +87,28 @@ export async function experience_routes(app: FastifyInstance): Promise<void> {
 
 
 	/**
+	 * Route to experiences.
+	 * @name get/experiences
+	 * @function
+	 */
+	app.get("/experiences", {
+		onRequest: [app.auth]
+		}, async (req: any, reply: FastifyReply) => {
+			const { sub } = req.user
+			const theUser = await retrieveUserId(app, sub);
+
+			let experiences = await app.db.experience.find({
+				where: {
+					user: {
+						id: theUser?.id
+					}
+				},
+			});
+			reply.send(experiences);
+	});
+
+
+	/**
 	 * Create a new message between given sender and recipient
 	 * @name post/add-experience
 	 * @function
@@ -103,23 +124,38 @@ export async function experience_routes(app: FastifyInstance): Promise<void> {
 			date: string,
 			experience: string,
 			image: string,
-			userId: number
 		},
 		Reply: IPostExperienceResponse
 	}>("/add-experience", {
 		onRequest: [app.auth]
 		}, async (req: any, reply: FastifyReply) => {
-			const {title, date, experience, image, userId} = req.body;
+			const { sub } = req.user
+			const theUser = await retrieveUserId(app, sub);
+			const {title, date, experience, image} = req.body;
 
 			const newExperience = new Experience();
 			newExperience.title = title;
 			newExperience.date = date;
 			newExperience.experience = experience;
 			newExperience.image = image;
-			newExperience.user = userId;
+			newExperience.user = theUser?.id;
 			newExperience.sub = req.user.sub;
 			await newExperience.save();
 			await reply.send(JSON.stringify(newExperience));
+	});
+
+	/**
+	 * Create a new message between given sender and recipient
+	 * @name post/upload-image
+	 * @function
+	 */
+	app.post("/upload-image", {
+		onRequest: [app.auth]
+		}, async (req: any, reply: FastifyReply) => {
+			const data = await req.file();
+			let upload = await UploadFileToMinio(data);
+
+			await reply.send(upload)
 	});
 
 
@@ -176,6 +212,11 @@ export async function experience_routes(app: FastifyInstance): Promise<void> {
 		  reply.send({ foo: decoded })
 		})
 	  })
+}
+
+const retrieveUserId = async (app: any, sub: string) => {
+	let theUser = await app.db.user.findOneBy({sub});
+	return theUser;
 }
 
 export type IPostExperienceResponse = {

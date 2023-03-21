@@ -1,47 +1,37 @@
 /** @module Models/Match */
-import {
-	BaseEntity,
-	Column,
-	CreateDateColumn,
-	DeleteDateColumn,
-	Entity, JoinTable,
-	ManyToMany,
-	ManyToOne,
-	PrimaryGeneratedColumn,
-	Relation
-} from "typeorm";
+import TypeORM from "typeorm";
 import {User} from "./user";
 
-@Entity()
-export class Experience extends BaseEntity {
-	@PrimaryGeneratedColumn()
+@TypeORM.Entity()
+export class Experience extends TypeORM.BaseEntity {
+	@TypeORM.PrimaryGeneratedColumn()
 	id: number;
 
-    @ManyToOne((type) => User, (user: User) => user.experience, {
+    @TypeORM.ManyToOne((type) => User, (user: User) => user.experience, {
 		cascade: true,
 		onDelete: "CASCADE"
 	})
-	user: Relation<User>;
+	user: TypeORM.Relation<User>;
 
-    @Column('text')
+    @TypeORM.Column('text')
 	title: string;
 
-    @Column('text')
+    @TypeORM.Column('text')
 	experience: string;
 
-    @Column('text')
+    @TypeORM.Column('text')
 	sub: string;
 
-    @Column('text')
+    @TypeORM.Column('text')
 	date: string;
 
-    @Column('text')
+    @TypeORM.Column('text')
 	image: string;
 
-	@CreateDateColumn()
+	@TypeORM.CreateDateColumn()
 	created_at: string;
 
-	@DeleteDateColumn()
+	@TypeORM.DeleteDateColumn()
 	deleted_at?: string;
 }
 

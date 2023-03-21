@@ -8,9 +8,20 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 /** @module Models/Match */
-import { BaseEntity, Column, CreateDateColumn, DeleteDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+// import {
+// 	BaseEntity,
+// 	Column,
+// 	CreateDateColumn,
+// 	DeleteDateColumn,
+// 	Entity, JoinTable,
+// 	ManyToMany,
+// 	ManyToOne,
+// 	PrimaryGeneratedColumn,
+// 	Relation
+// } from "typeorm";
+import TypeORM from "typeorm";
 import { User } from "./user.js";
-let Experience = class Experience extends BaseEntity {
+let Experience = class Experience extends TypeORM.BaseEntity {
     id;
     user;
     title;
@@ -22,46 +33,46 @@ let Experience = class Experience extends BaseEntity {
     deleted_at;
 };
 __decorate([
-    PrimaryGeneratedColumn(),
+    TypeORM.PrimaryGeneratedColumn(),
     __metadata("design:type", Number)
 ], Experience.prototype, "id", void 0);
 __decorate([
-    ManyToOne((type) => User, (user) => user.experience, {
+    TypeORM.ManyToOne((type) => User, (user) => user.experience, {
         cascade: true,
         onDelete: "CASCADE"
     }),
     __metadata("design:type", Object)
 ], Experience.prototype, "user", void 0);
 __decorate([
-    Column('text'),
+    TypeORM.Column('text'),
     __metadata("design:type", String)
 ], Experience.prototype, "title", void 0);
 __decorate([
-    Column('text'),
+    TypeORM.Column('text'),
     __metadata("design:type", String)
 ], Experience.prototype, "experience", void 0);
 __decorate([
-    Column('text'),
+    TypeORM.Column('text'),
     __metadata("design:type", String)
 ], Experience.prototype, "sub", void 0);
 __decorate([
-    Column('text'),
+    TypeORM.Column('text'),
     __metadata("design:type", String)
 ], Experience.prototype, "date", void 0);
 __decorate([
-    Column('text'),
+    TypeORM.Column('text'),
     __metadata("design:type", String)
 ], Experience.prototype, "image", void 0);
 __decorate([
-    CreateDateColumn(),
+    TypeORM.CreateDateColumn(),
     __metadata("design:type", String)
 ], Experience.prototype, "created_at", void 0);
 __decorate([
-    DeleteDateColumn(),
+    TypeORM.DeleteDateColumn(),
     __metadata("design:type", String)
 ], Experience.prototype, "deleted_at", void 0);
 Experience = __decorate([
-    Entity()
+    TypeORM.Entity()
 ], Experience);
 export { Experience };
 //# sourceMappingURL=experience.js.map

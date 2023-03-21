@@ -5,14 +5,14 @@ import { MdModeEdit } from "react-icons/md";
 import { IoMdPhotos } from "react-icons/io";
 
 interface ImgProps {
-  image: string,
+  image: Blob,
   setImage: Function,
 }
 
 
 const ImageUpload = ({ image, setImage }: ImgProps) => {
   const imageFileRef = useRef<any>();
-  const [imagePreview, setimagePreview] = useState<string | ArrayBuffer | null>();
+  const [imagePreview, setimagePreview] = useState<any>();
 
   useEffect(() => {
     if (!image) {
@@ -27,32 +27,29 @@ const ImageUpload = ({ image, setImage }: ImgProps) => {
   }, [image]);
 
     // function for selecting updated image file
-  const selectedImageHandler = (event: FormEvent) => {
-    let selectedImage;
+  const onFileChange = event => {
+    console.log('test img upload---', event.target.files)
     if (event.target.files && event.target.files.length === 1) {
-      selectedImage = event.target.files[0];
-      setImage(selectedImage);
+      setImage( event.target.files[0]);
     }
   }
   // function for image file selection 
-  const imageSelectHandler = (event: any) => {
+  const selectedImageHandler = (event: any) => {
     imageFileRef?.current.click();
-    let selectedImage;
+    console.log('selectedImageHandler---', event.target.files);
     if (event.target.files && event.target.files.length === 1) {
-      selectedImage = event.target.files[0];
-      setImage(selectedImage);
+      setImage(event.target.files[0]);
     }
   }
 
   return (
-    // Image container
     <div className="ImageWrapper">
       <input
         ref={imageFileRef}
         style={{ display: "none" }}
         type="file"
         accept=".jpg,.png,.jpeg" // Only can upload '.jpg, .png, .jpeg' 
-        onChange={selectedImageHandler}
+        onChange={onFileChange}
       />
       
       <div className="ImageWrapper__upload">
@@ -62,7 +59,7 @@ const ImageUpload = ({ image, setImage }: ImgProps) => {
               <div className="editIcon">
                 <MdModeEdit
                   className="iconEdit"
-                  onClick={imageSelectHandler}
+                  onClick={selectedImageHandler}
                 ></MdModeEdit>
               </div>
             </div>
@@ -71,7 +68,7 @@ const ImageUpload = ({ image, setImage }: ImgProps) => {
             <div className="ImageWrapper__addIcon">
               <IoMdPhotos
                 className="galleryIcon"
-                onClick={imageSelectHandler}
+                onClick={selectedImageHandler}
               ></IoMdPhotos>
               <h4> Add Photo </h4>
             </div>
@@ -84,7 +81,7 @@ const ImageUpload = ({ image, setImage }: ImgProps) => {
 };
 
 ImageUpload.propTypes = {
-  image: PropTypes.string,
+  image: PropTypes.any,
   setImage: PropTypes.func
 };
 
