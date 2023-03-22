@@ -4,7 +4,7 @@ import TypeORM from 'typeorm';
 // Similar reasoning as above, we need to add the file extensions to this file's imports for CLI usage
 import { User } from "../models/user.js";
 import { Experience } from "../models/experience.js";
-import { initialize1679431901208 } from "../migrations/1679431901208-initialize.js";
+import { initialize1679507780670 } from "../migrations/1679507780670-initialize.js";
 dotenv.config();
 // @ts-ignore 
 const env = process.env;
@@ -21,7 +21,7 @@ export const AppDataSource = new TypeORM.DataSource({
         Experience
     ],
     migrations: [
-        initialize1679431901208
+        initialize1679507780670
     ],
     // DANGER DANGER our convenience will nuke production data!
     synchronize: false

@@ -3,6 +3,11 @@
     color: #000000;
     margin: 5.5em 10em;
     padding: 2em 4em;
+    &__img {
+        height: 400px;
+        width: auto;
+        padding-bottom: 2em;
+    }
     &__title {
         font-size: 2em;
         font-weight: 600;

@@ -1,6 +1,6 @@
 import { User } from "./db/models/user.js";
 import { Experience } from "./db/models/experience.js";
-import { UploadFileToMinio } from "./lib/minio.js";
+import { UploadFileToMinio, GetFileFromMinio } from "./lib/minio.js";
 /**
  * App plugin where we construct our routes
  * @param {FastifyInstance} app our main Fastify app instance
@@ -24,7 +24,7 @@ export async function experience_routes(app) {
     }, async (req, reply) => {
         const { name, picture, email, sub } = req.user;
         try {
-            let theUser = await app.db.user.findOneBy({ sub });
+            const theUser = await retrieveUserId(app, sub);
             if (theUser) {
                 // User has authenticated successfully!
                 const token = app.jwt.sign({ email, id: theUser.id });
@@ -55,10 +55,7 @@ export async function experience_routes(app) {
     app.get("/user", {
         onRequest: [app.auth]
     }, async (request, reply) => {
-        // This will return all users along with their associated profiles and ip histories via relations
-        // https://typeorm.io/find-options
         let user = await app.db.user.find({
-            // This allows you to define which fields appear/do not appear in your result.
             select: {
                 id: true,
                 name: true,
@@ -86,7 +83,7 @@ export async function experience_routes(app) {
         onRequest: [app.auth]
     }, async (req, reply) => {
         const { sub } = req.user;
-        let theUser = await app.db.user.findOneBy({ sub });
+        const theUser = await retrieveUserId(app, sub);
         let experiences = await app.db.experience.find({
             where: {
                 user: {
@@ -106,17 +103,45 @@ export async function experience_routes(app) {
      * @param {string} image - images
      * @returns {IPostExperienceResponse} experience used to create experience
      */
+    // app.post<{
+    // 	Body: {
+    // 		title: string,
+    // 		date: string,
+    // 		experience: string,
+    // 		image: string,
+    // 	},
+    // 	Reply: IPostExperienceResponse
+    // }>("/add-experience", {
     app.post("/add-experience", {
         onRequest: [app.auth]
     }, async (req, reply) => {
-        const { title, date, experience, image, userId } = req.body;
+        const { sub } = req.user;
+        const theUser = await retrieveUserId(app, sub);
+        // const {title, date, experience, image} = req.body;
+        let fileData = await req.file();
+        console.log('filedate-----', fileData);
+        // if (Array.isArray(fileData)){
+        // 	console.log("TODO: Array")
+        // }else{
+        // 	var newFile = new MYFile()
+        // 	newFile.name = fileData.name
+        // 	newFile.data = fileData.data.toString('base64')
+        // 	newFile.mimeType = fileData.mimetype
+        // }
         const newExperience = new Experience();
-        newExperience.title = title;
-        newExperience.date = date;
-        newExperience.experience = experience;
-        newExperience.image = image;
-        newExperience.user = userId;
+        newExperience.title = "fileData.title.value";
+        newExperience.date = "fileData.date.value";
+        newExperience.experience = "fileData.experience.value";
+        newExperience.image = fileData.file;
+        newExperience.user = theUser?.id;
         newExperience.sub = req.user.sub;
+        console.log('exp datta----', newExperience);
+        // newExperience.title = title;
+        // newExperience.date = date;
+        // newExperience.experience = experience;
+        // newExperience.image = fileData.data;
+        // newExperience.user = theUser?.id;
+        // newExperience.sub = req.user.sub;
         await newExperience.save();
         await reply.send(JSON.stringify(newExperience));
     });
@@ -128,20 +153,8 @@ export async function experience_routes(app) {
     app.post("/upload-image", {
         onRequest: [app.auth]
     }, async (req, reply) => {
-        // const {title, date, experience, image, userId} = req.body;
         const data = await req.file();
         let upload = await UploadFileToMinio(data);
-        // let img = await GetFileFromMinio(data.filename);
-        console.log('test-------', data.fields);
-        // const newExperience = new Experience();
-        // newExperience.title = data.fields.title?.value;
-        // newExperience.date = data.fields.date?.value;
-        // newExperience.experience = data.fields.experience?.value;
-        // newExperience.image = data.fields.file.filename;
-        // newExperience.user =  data.fields.userId?.value;
-        // newExperience.sub = req.user.sub;
-        // await newExperience.save();
-        // await reply.send(JSON.stringify(newExperience));
         await reply.send(upload);
     });
     const post_experience_opts = {
@@ -178,11 +191,26 @@ export async function experience_routes(app) {
     }, async (req, reply) => {
         const experienceId = req.params.experienceId;
         let exp = await app.db.experience.find({
+            select: {
+                image: true
+            },
             where: {
                 id: experienceId,
             },
         });
-        reply.send(...exp);
+        let file = await GetFileFromMinio("copyright2.png");
+        console.log('exp---', exp);
+        // // let upload = await UploadFileToMinio(data);
+        // // exp[0].image = file
+        // // console.log('test-----', {...exp});
+        // // exp = [...exp, "image": file]
+        // let respBuild = {...exp};
+        // let newObj = {...respBuild['0'], 'image': file}
+        // console.log('test-----8888888', newObj, respBuild['0'].image);
+        // reply.headers(content-type: 'multipart/form-data')
+        reply.header('Content-Type', 'image/png');
+        // // respBuild['0'].imagef
+        reply.send(exp);
     });
     app.get('/decode', async (request, reply) => {
         const auth = request.headers.authorization;
@@ -195,4 +223,8 @@ export async function experience_routes(app) {
         });
     });
 }
+const retrieveUserId = async (app, sub) => {
+    let theUser = await app.db.user.findOneBy({ sub });
+    return theUser;
+};
 //# sourceMappingURL=routes.js.map

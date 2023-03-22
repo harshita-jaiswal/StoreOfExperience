@@ -8,17 +8,6 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 /** @module Models/Match */
-// import {
-// 	BaseEntity,
-// 	Column,
-// 	CreateDateColumn,
-// 	DeleteDateColumn,
-// 	Entity, JoinTable,
-// 	ManyToMany,
-// 	ManyToOne,
-// 	PrimaryGeneratedColumn,
-// 	Relation
-// } from "typeorm";
 import TypeORM from "typeorm";
 import { User } from "./user.js";
 let Experience = class Experience extends TypeORM.BaseEntity {
@@ -29,6 +18,7 @@ let Experience = class Experience extends TypeORM.BaseEntity {
     sub;
     date;
     image;
+    imageData;
     created_at;
     deleted_at;
 };
@@ -63,6 +53,12 @@ __decorate([
     TypeORM.Column('text'),
     __metadata("design:type", String)
 ], Experience.prototype, "image", void 0);
+__decorate([
+    TypeORM.Column({
+        type: "bytea"
+    }),
+    __metadata("design:type", Buffer)
+], Experience.prototype, "imageData", void 0);
 __decorate([
     TypeORM.CreateDateColumn(),
     __metadata("design:type", String)

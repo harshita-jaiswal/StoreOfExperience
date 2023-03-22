@@ -28,7 +28,6 @@ const ImageUpload = ({ image, setImage }: ImgProps) => {
 
     // function for selecting updated image file
   const onFileChange = event => {
-    console.log('test img upload---', event.target.files)
     if (event.target.files && event.target.files.length === 1) {
       setImage( event.target.files[0]);
     }
@@ -36,7 +35,6 @@ const ImageUpload = ({ image, setImage }: ImgProps) => {
   // function for image file selection 
   const selectedImageHandler = (event: any) => {
     imageFileRef?.current.click();
-    console.log('selectedImageHandler---', event.target.files);
     if (event.target.files && event.target.files.length === 1) {
       setImage(event.target.files[0]);
     }

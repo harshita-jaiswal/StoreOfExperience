@@ -28,6 +28,11 @@ export class Experience extends TypeORM.BaseEntity {
     @TypeORM.Column('text')
 	image: string;
 
+	@TypeORM.Column({
+        type: "bytea"
+    })
+	imageData!: Buffer;
+
 	@TypeORM.CreateDateColumn()
 	created_at: string;
 

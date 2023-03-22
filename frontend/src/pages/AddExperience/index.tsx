@@ -52,8 +52,8 @@ const AddExperience = () => {
             httpClient.post('/upload-image', formData, config),
             httpClient.post('/add-experience', {
                 ...expFormData,
-                Title:"fdjfdjnd",
-                image: expFormData.image.name
+                image: expFormData.image.name,
+                imageData: expFormData.image,
             })
         ]).then((response) => {
             console.log("Got response from upload file:", response);

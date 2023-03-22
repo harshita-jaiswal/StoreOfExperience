@@ -2,7 +2,7 @@
 import {FastifyInstance, FastifyReply, FastifyRequest, RouteShorthandOptions} from "fastify";
 import {User} from "./db/models/user";
 import {Experience} from "./db/models/experience";
-import {UploadFileToMinio, GetFileFromMinio} from "./lib/minio";
+import {UploadFileToMinio} from "./lib/minio";
 
 /**
  * App plugin where we construct our routes
@@ -124,6 +124,7 @@ export async function experience_routes(app: FastifyInstance): Promise<void> {
 			date: string,
 			experience: string,
 			image: string,
+			imageData: any
 		},
 		Reply: IPostExperienceResponse
 	}>("/add-experience", {
@@ -131,13 +132,14 @@ export async function experience_routes(app: FastifyInstance): Promise<void> {
 		}, async (req: any, reply: FastifyReply) => {
 			const { sub } = req.user
 			const theUser = await retrieveUserId(app, sub);
-			const {title, date, experience, image} = req.body;
+			const {title, date, experience, image, imageData} = req.body;
 
 			const newExperience = new Experience();
 			newExperience.title = title;
 			newExperience.date = date;
 			newExperience.experience = experience;
 			newExperience.image = image;
+			newExperience.imageData = imageData;
 			newExperience.user = theUser?.id;
 			newExperience.sub = req.user.sub;
 			await newExperience.save();
@@ -193,7 +195,7 @@ export async function experience_routes(app: FastifyInstance): Promise<void> {
 		onRequest: [app.auth]
 		}, async (req: any, reply: FastifyReply) => {
 			const experienceId = req.params.experienceId;
-
+			
 			let exp = await app.db.experience.find({
 				where: {
 					id: experienceId,

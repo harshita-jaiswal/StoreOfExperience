@@ -28,44 +28,44 @@ export const UploadFileToMinio = async (file) => {
     return success;
 };
 export const GetFileFromMinio = async (filename) => {
-    // let size = 0
-    // let stream = null
-    // // minioClient.getObject('experience', filename, (err: any, dataStream: any) => {
-    // // 	if (err) {
-    // // 	  return console.log(err)
-    // // 	}
-    // // 	stream = dataStream
-    // // 	dataStream.on('data', chunk => {
-    // // 	  size += chunk.length
-    // // 	})
-    // // 	dataStream.on('end', function() {
-    // // 	  console.log('End. Total size = ' + size)
-    // // 	})
-    // // 	dataStream.on('error', (err) => {
-    // // 	  console.log(err)
-    // // 	})
-    // //   })
-    // try {
-    // 	 await minioClient.getObject('experience', filename, (err: any, dataStream: any) => {
-    // 		if (err) {
-    // 			return console.log(err)
-    // 		}
-    // 		stream = dataStream
-    // 		// console.log('datastream----', dataStream);
-    // 		dataStream.on('data', chunk => {
-    // 			size += chunk.length
-    // 		})
-    // 		dataStream.on('end', function() {
-    // 			console.log('End. Total size = ' + size)
-    // 		})
-    // 		dataStream.on('error', (err) => {
-    // 			console.log(err)
-    // 		})
-    // 		return dataStream
-    // 	  })
-    // } catch (err) {
-    // 	console.log("In get file to minio with err: ", err);
-    // }
-    // return stream;
+    let size = 0;
+    let stream;
+    // minioClient.getObject('experience', filename, (err: any, dataStream: any) => {
+    // 	if (err) {
+    // 	  return console.log(err)
+    // 	}
+    // 	stream = dataStream
+    // 	dataStream.on('data', chunk => {
+    // 	  size += chunk.length
+    // 	})
+    // 	dataStream.on('end', function() {
+    // 	  console.log('End. Total size = ' + size)
+    // 	})
+    // 	dataStream.on('error', (err) => {
+    // 	  console.log(err)
+    // 	})
+    //   })
+    try {
+        stream = await minioClient.getObject('experience', filename, (err, dataStream) => {
+            if (err) {
+                return console.log(err);
+            }
+            dataStream.on('data', (chunk) => {
+                size += chunk.length;
+            });
+            dataStream.on('end', function () {
+                console.log('End. Total size = ' + size);
+            });
+            dataStream.on('error', (err) => {
+                console.log(err);
+            });
+            // return dataStream
+        });
+        // stream = dataStream;
+    }
+    catch (err) {
+        console.log("In get file to minio with err: ", err);
+    }
+    return stream;
 };
 //# sourceMappingURL=minio.js.map

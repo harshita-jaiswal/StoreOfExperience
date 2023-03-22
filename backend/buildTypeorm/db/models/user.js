@@ -8,16 +8,6 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 /** @module Models/User */
-// import {
-// 	BaseEntity,
-// 	Column,
-// 	CreateDateColumn,
-// 	Entity,
-// 	OneToMany,
-// 	PrimaryGeneratedColumn,
-// 	Relation,
-// 	UpdateDateColumn
-// } from "typeorm";
 import TypeORM from "typeorm";
 import { Experience } from "./experience.js";
 /**
