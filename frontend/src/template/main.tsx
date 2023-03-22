@@ -5,12 +5,13 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import Loader from "../components/Loader";
 import Home from "../pages/Home";
+import Experience from "../pages/Experience";
 import AddExperience from "../pages/AddExperience";
 import Login from "../pages/Login";
 
 
 export default function Main() {
-    const {token, loader} = useAuth();
+    const {loader} = useAuth();
     return (
        <>
         {
@@ -23,20 +24,11 @@ function AppMain() {
     const {token} = useAuth();
     return (
         <>
-           {/* {
-                token ?
-              <AppProtectedView />
-                    : ""
-            } */}
            {
                 token ?
               <AppProtectedView />
-                //     : <Routes>
-                //     <Route path="/" element={<Login/>}/>
-                // </Routes>
                 : AppRoutes()
             }
-            {/* <AppRoutes /> */}
         </>
     )
 }
@@ -45,12 +37,10 @@ function AppProtectedView() {
 	return (
 		<>
         <Header/>
-        {/* <Home/>
-        <AddExperience /> */}
         <Routes>
             <Route path="/home" element={<ProtectedRoute><Home/></ProtectedRoute>} />
             <Route path="/add-experience" element={<ProtectedRoute><AddExperience /></ProtectedRoute>} />
-            {/* <Route path="/" element={<Login/>}/> */}
+            <Route path="/experience/:experienceId" element={<ProtectedRoute><Experience /></ProtectedRoute>} />
         </Routes>
         <Footer/>
         </>
@@ -63,6 +53,7 @@ function AppRoutes() {
 		<Routes>
             <Route path="/home" element={<ProtectedRoute><Home/></ProtectedRoute>} />
             <Route path="/add-experience" element={<ProtectedRoute><AddExperience /></ProtectedRoute>} />
+            <Route path="/experience/:experienceId" element={<ProtectedRoute><Experience /></ProtectedRoute>} />
             <Route path="/" element={<Login/>}/>
 		</Routes>
 	);

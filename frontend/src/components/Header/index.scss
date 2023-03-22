@@ -2,7 +2,7 @@
     background-color: #ffffff;
     box-shadow: 0 0 10px rgb(0 0 0 / 10%);
     max-width: 100%;
-    color: #000000;
+    color: #fcb900;
     max-height: 75px;
     padding: 1.2em 2em;
     display: flex;
@@ -11,7 +11,7 @@
     font-weight: 600;
     .logo {
         height: 40px;
-        width: 60px;
+        width: 40px;
     }
     &__menu {
         display: flex;
@@ -25,9 +25,9 @@
             border-bottom: 0.1em solid #ffffff;
             text-align: center;
             &:hover {
-                border-bottom: 0.1em solid #000000;
+                border-bottom: 0.1em solid #fcb900;
                 transition: border-bottom 1sec;
-                color: #000000;
+                color: #fcb900;
             }
         }
     }

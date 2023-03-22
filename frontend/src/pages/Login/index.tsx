@@ -1,5 +1,5 @@
 import {AuthContext, useAuth} from "../../services/AuthService";
-import logo from '../../assets/logo.jpeg'
+import logo from '../../assets/banner-2.jpeg'
 import "./index.scss";
 
 export default function Login() {
@@ -12,7 +12,7 @@ export default function Login() {
         initLoginOrLogout("/");
 	};
     const divStyle = {
-        background: 'no-repeat center/100% url(' + logo + ')',
+        background: '#fcb900 no-repeat center/100% url(' + logo + ')',
       };
 
 	return (

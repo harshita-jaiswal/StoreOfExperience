@@ -1,6 +1,6 @@
 import './index.scss';
-import github from '../../assets/github.png'
-import copyright from '../../assets/copyright.png'
+import github from '../../assets/github-black.png'
+import copyright from '../../assets/copyright-transparent.png'
 
 const Footer = () => {
     return (

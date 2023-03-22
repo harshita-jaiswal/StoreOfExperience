@@ -1,14 +1,13 @@
 import { Link, Route, Routes } from 'react-router-dom';
 import './index.scss';
-import logo from '../../assets/logo.jpeg'
-import {AuthContext, useAuth} from "../../services/AuthService";
+import logo from '../../assets/logo-2.jpeg'
+import {useAuth} from "../../services/AuthService";
 
 const Header = () => {
     const {handleLogout, initLoginOrLogout} = useAuth();
     const logout = async () => {
         initLoginOrLogout("/logout")
         handleLogout()
-        // await AuthHttpClient.get("/logout")
     }
     return (
         <div className="Header">

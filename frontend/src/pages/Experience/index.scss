@@ -1,0 +1,21 @@
+.Experience {
+    min-height: 52%;
+    color: #000000;
+    margin: 5.5em 10em;
+    padding: 2em 4em;
+    &__title {
+        font-size: 2em;
+        font-weight: 600;
+        text-transform: capitalize;
+        padding-bottom: 1em;
+    }
+    &__date {
+        font-size: 1em;
+        padding-bottom: 1em;
+    }
+    &__desc {
+        font-size: 1.1em;
+        font-weight: 400;
+        padding-bottom: 1em;
+    }
+}
