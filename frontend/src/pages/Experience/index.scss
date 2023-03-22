@@ -1,8 +1,7 @@
+@import '../../assets/styles/base.scss';
 .Experience {
-    min-height: 52%;
     color: #000000;
-    margin: 5.5em 10em;
-    padding: 2em 4em;
+    padding: 5.5em 10em;
     &__img {
         height: 400px;
         width: auto;
@@ -22,5 +21,8 @@
         font-size: 1.1em;
         font-weight: 400;
         padding-bottom: 1em;
+    }
+    @include mobile {
+        padding: 3em;    
     }
 }

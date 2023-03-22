@@ -8,6 +8,7 @@ import Home from "../pages/Home";
 import Experience from "../pages/Experience";
 import AddExperience from "../pages/AddExperience";
 import Login from "../pages/Login";
+import '../assets/styles/base.scss';
 
 
 export default function Main() {
@@ -37,11 +38,13 @@ function AppProtectedView() {
 	return (
 		<>
         <Header/>
-        <Routes>
-            <Route path="/home" element={<ProtectedRoute><Home/></ProtectedRoute>} />
-            <Route path="/add-experience" element={<ProtectedRoute><AddExperience /></ProtectedRoute>} />
-            <Route path="/experience/:experienceId" element={<ProtectedRoute><Experience /></ProtectedRoute>} />
-        </Routes>
+        <div className="AppContent">
+            <Routes>
+                <Route path="/home" element={<ProtectedRoute><Home/></ProtectedRoute>} />
+                <Route path="/add-experience" element={<ProtectedRoute><AddExperience /></ProtectedRoute>} />
+                <Route path="/experience/:experienceId" element={<ProtectedRoute><Experience /></ProtectedRoute>} />
+            </Routes>
+        </div>
         <Footer/>
         </>
 	);

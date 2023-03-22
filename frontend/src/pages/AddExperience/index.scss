@@ -1,12 +1,15 @@
+@import '../../assets/styles/base.scss';
 .AddExperience {
     color: #000000;
-    min-height: 82.5%;
-    margin: 5.5em 10em;
-    padding: 2em 4em;
+    padding: 5.5em 14em;
     display: flex;
     flex-direction: column;
     position: relative;
     max-width: 100%;
+    @include mobile {
+        padding: 3em;   
+
+    }
     &__toast {
         /* width: auto; */
         padding: 1em;
@@ -65,7 +68,7 @@
         animation: fadein 0.5s, fadeout 0.5s 3s;
       }
       
-      /* Animations to fade the snackbar in and out */
+      /* Animations to fade the toast in and out */
       @-webkit-keyframes fadein {
         from {right: 0; opacity: 0;}
         to {right: 80px; opacity: 1;}
