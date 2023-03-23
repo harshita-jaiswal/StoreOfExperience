@@ -40,7 +40,6 @@ oauth.register(
     server_metadata_url=f'https://{env.get("AUTH0_DOMAIN")}/.well-known/openid-configuration',
 )
 
-# clientUrl = f"http://{env.get(FE_HOST):{env.get(FE_PORT)}}"
 
 # Controllers API
 @app.route("/")
@@ -59,46 +58,16 @@ def home():
 def callback():
     codeVal = request.args.get("code");
     token = oauth.auth0.authorize_access_token()
-    print('------', token['id_token'])
     
     session["user"] = token
-    # userInfo = json.dumps(session.get("user"), indent=4)
-    # print(json.dumps(token, indent=4).userinfo)
-    # val = json.loads(userInfo)
-    # resp = make_response(redirect(env.get(FE_URL)))
     resp = make_response(redirect(FE_URL)) # add url in auth0 configuration in callback urls
-    # resp = make_response(redirect("/"))
-    # userInfo = val['userinfo']
-    print('resp---', resp)
-    # print('test----', val['userinfo']['sub'], userInfo['sub'])
-    # resp.set_cookie('user_id', value=val['userinfo']['sub'])
-    # resp.set_cookie('token', token['id_token'], path="/", domain="http://127.0.0.1:5174")
     resp.set_cookie('token', token['id_token'])
-    print('resp---', resp, FE_URL)
     return resp 
-    # print(val['userinfo']['sub'])
-    # session["detail"] = userInfo
-    # session["sub"] = userInfo.userinfo.sub
-    # print('session---', session.get("sub"))
-    # return redirect("http://127.0.0.1:5173")
-    # return redirect("/")
-
-
-# @app.route("/login")
-# def login():
-#     return oauth.auth0.authorize_redirect(
-#         redirect_uri=url_for("callback", _external=True)
-#     )
 
 
 @app.route("/logout")
 def logout():
     session.clear()
-    # resp = make_response(redirect("http://127.0.0.1:5174"))
-    # print('logout----------', session, resp.cookies.get('token'));
-    # resp.delete_cookie('token')
-    # return resp
-    # return redirect("http://127.0.0.1:5174")
     return redirect(
         "https://"
         + env.get("AUTH0_DOMAIN")
