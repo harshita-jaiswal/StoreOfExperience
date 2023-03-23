@@ -17,7 +17,7 @@ services:
       - VITE_DB_NAME=experience
     depends_on:
       - postgres
-    # command: ["./wait-for-it.sh", "db:5432", "--", "python", "app.py"]
+    command: ["./wait-for-it.sh", "postgres:5432", "--"]
 
   frontend:
     container_name: frontend
@@ -57,7 +57,7 @@ services:
       - APP_SECRET_KEY=e497c51f1a201412cfb13ae8837fd5a81d3740bd52bf12b22300c31af8d7c462
       - FE_HOST=127.0.0.1
       - FE_PORT=88
-    depends_on: #This is a lie
+    depends_on:
       - frontend
 
   minio:

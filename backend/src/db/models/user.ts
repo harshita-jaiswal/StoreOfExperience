@@ -6,8 +6,7 @@ import {Experience} from "./experience";
 /**
  *  Class representing user table
  */
-// @TypeORM.Entity({name: "users"})
-@TypeORM.Entity()
+@TypeORM.Entity({name: "users"})
 export class User extends TypeORM.BaseEntity {
 	@TypeORM.PrimaryGeneratedColumn()
 	id: number;
