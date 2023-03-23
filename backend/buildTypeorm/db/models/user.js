@@ -13,6 +13,7 @@ import { Experience } from "./experience.js";
 /**
  *  Class representing user table
  */
+// @TypeORM.Entity({name: "users"})
 let User = class User extends TypeORM.BaseEntity {
     id;
     name;
@@ -60,7 +61,7 @@ __decorate([
     __metadata("design:type", String)
 ], User.prototype, "updated_at", void 0);
 User = __decorate([
-    TypeORM.Entity({ name: "users" })
+    TypeORM.Entity()
 ], User);
 export { User };
 //# sourceMappingURL=user.js.map

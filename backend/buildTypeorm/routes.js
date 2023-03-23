@@ -1,6 +1,6 @@
 import { User } from "./db/models/user.js";
 import { Experience } from "./db/models/experience.js";
-import { UploadFileToMinio, GetFileFromMinio } from "./lib/minio.js";
+import { UploadFileToMinio } from "./lib/minio.js";
 /**
  * App plugin where we construct our routes
  * @param {FastifyInstance} app our main Fastify app instance
@@ -103,45 +103,20 @@ export async function experience_routes(app) {
      * @param {string} image - images
      * @returns {IPostExperienceResponse} experience used to create experience
      */
-    // app.post<{
-    // 	Body: {
-    // 		title: string,
-    // 		date: string,
-    // 		experience: string,
-    // 		image: string,
-    // 	},
-    // 	Reply: IPostExperienceResponse
-    // }>("/add-experience", {
     app.post("/add-experience", {
         onRequest: [app.auth]
     }, async (req, reply) => {
         const { sub } = req.user;
         const theUser = await retrieveUserId(app, sub);
-        // const {title, date, experience, image} = req.body;
-        let fileData = await req.file();
-        console.log('filedate-----', fileData);
-        // if (Array.isArray(fileData)){
-        // 	console.log("TODO: Array")
-        // }else{
-        // 	var newFile = new MYFile()
-        // 	newFile.name = fileData.name
-        // 	newFile.data = fileData.data.toString('base64')
-        // 	newFile.mimeType = fileData.mimetype
-        // }
+        const { title, date, experience, image, imageData } = req.body;
         const newExperience = new Experience();
-        newExperience.title = "fileData.title.value";
-        newExperience.date = "fileData.date.value";
-        newExperience.experience = "fileData.experience.value";
-        newExperience.image = fileData.file;
+        newExperience.title = title;
+        newExperience.date = date;
+        newExperience.experience = experience;
+        newExperience.image = image;
+        newExperience.imageData = imageData;
         newExperience.user = theUser?.id;
         newExperience.sub = req.user.sub;
-        console.log('exp datta----', newExperience);
-        // newExperience.title = title;
-        // newExperience.date = date;
-        // newExperience.experience = experience;
-        // newExperience.image = fileData.data;
-        // newExperience.user = theUser?.id;
-        // newExperience.sub = req.user.sub;
         await newExperience.save();
         await reply.send(JSON.stringify(newExperience));
     });
@@ -191,26 +166,11 @@ export async function experience_routes(app) {
     }, async (req, reply) => {
         const experienceId = req.params.experienceId;
         let exp = await app.db.experience.find({
-            select: {
-                image: true
-            },
             where: {
                 id: experienceId,
             },
         });
-        let file = await GetFileFromMinio("copyright2.png");
-        console.log('exp---', exp);
-        // // let upload = await UploadFileToMinio(data);
-        // // exp[0].image = file
-        // // console.log('test-----', {...exp});
-        // // exp = [...exp, "image": file]
-        // let respBuild = {...exp};
-        // let newObj = {...respBuild['0'], 'image': file}
-        // console.log('test-----8888888', newObj, respBuild['0'].image);
-        // reply.headers(content-type: 'multipart/form-data')
-        reply.header('Content-Type', 'image/png');
-        // // respBuild['0'].imagef
-        reply.send(exp);
+        reply.send(...exp);
     });
     app.get('/decode', async (request, reply) => {
         const auth = request.headers.authorization;
