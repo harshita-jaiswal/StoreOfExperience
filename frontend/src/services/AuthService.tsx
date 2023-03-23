@@ -51,12 +51,6 @@ export const AuthProvider = ({children}) => {
 	},[token]);
 	
 
-	// const handleLogin = async () => {
-	// 	// const newToken = await getLoginTokenFromServer(email, password);
-	// 	// await saveToken(newToken);
-	// 	return getTokenFromCookie() ? navigate("/home") : "";
-	// };
-
 	const handleLogout = async () => {
 		// await saveToken(null);
 		console.log('handleLogout')
@@ -64,13 +58,6 @@ export const AuthProvider = ({children}) => {
 		navigate('/');
 	};
 
-	// const saveToken =  async (token: string) => {
-	// 	setToken(token);
-
-	// 	localStorage.setItem("token", JSON.stringify(token));
-
-	// 	await updateAxios(token);
-	// };
 
 	const initLoginOrLogout = (endpoint: string) => {
 		isLoading(true);
@@ -105,12 +92,9 @@ async function getLoginTokenFromServer(email: string, password: string) {
 
 function getTokenFromCookie() {
 	const tokenString = Cookies.get('token');
-	// const tokenString = localStorage.getItem('token');
 	if ( tokenString == null) {
 		return null;
 	}
-	// const userToken = JSON.parse(tokenString);
-	// return userToken?.token;
 	return tokenString;
 }
 
