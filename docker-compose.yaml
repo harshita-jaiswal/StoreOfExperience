@@ -26,7 +26,7 @@ services:
     ports:
       - "88:80" # We need to map here for convenience, so we don't conflict with a potential possible local server
     environment:
-      - VITE_BACKEND_IP=backend
+      - VITE_BACKEND_IP=127.0.0.1
       - VITE_BACKEND_PORT=8080
       - VITE_AUTH_IP='127.0.0.1'
       - VITE_AUTH_PORT=3000
