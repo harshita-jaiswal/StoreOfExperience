@@ -8,6 +8,17 @@ WORKDIR /app
 COPY ./nginx.conf /nginx.conf
 COPY package*.json /app/
 
+
+# set default node env
+ARG NODE_ENV=development
+# ARG NODE_ENV=production # to be able to run tests (for example in CI), do not set production as environment
+ENV NODE_ENV=${NODE_ENV}
+
+ENV VITE_BACKEND_IP=127.0.0.1
+ENV VITE_BACKEND_PORT=8080
+ENV VITE_AUTH_IP=127.0.0.1
+ENV VITE_AUTH_PORT=3000
+
 RUN pnpm install
 
 COPY ./ /app/

@@ -22,13 +22,11 @@ ENV NPM_CONFIG_LOGLEVEL=info
 ENV VITE_IP_ADDR=0.0.0.0
 ENV VITE_PORT=8080
 ENV VITE_LOGS_DIR=logs/
-ENV VITE_DB_HOST=postgres
+ENV VITE_DB_HOST=127.0.0.1
 ENV VITE_DB_PORT=5432
 ENV VITE_DB_USER=experience
 ENV VITE_DB_PASS=experience
 ENV VITE_DB_NAME=experience
-# ENV VITE_ADMIN_PASSWORD=adminpw
-# ENV VITE_JWT_SECRET=superSecret
 
 # copy project definition/dependencies files, for better reuse of layers
 COPY --chown=nodejs:nodejs package*.json ./
