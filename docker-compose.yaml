@@ -15,10 +15,9 @@ services:
       - VITE_DB_USER=experience
       - VITE_DB_PASS=experience
       - VITE_DB_NAME=experience
-      # - VITE_ADMIN_PASSWORD=adminpw
-      # - VITE_JWT_SECRET=superSecret
     depends_on:
       - postgres
+    # command: ["./wait-for-it.sh", "db:5432", "--", "python", "app.py"]
 
   frontend:
     container_name: frontend
@@ -29,13 +28,8 @@ services:
     environment:
       - VITE_BACKEND_IP=backend
       - VITE_BACKEND_PORT=8080
-      - VITE_AUTH_IP=authentication
+      - VITE_AUTH_IP='127.0.0.1'
       - VITE_AUTH_PORT=3000
-
-#       VITE_BACKEND_IP=127.0.0.1
-# VITE_BACKEND_PORT=8080
-# VITE_AUTH_IP=127.0.0.1
-# VITE_AUTH_PORT=3000
 
   postgres:
     container_name: postgres
@@ -52,9 +46,6 @@ services:
 
   authentication:
     container_name: authentication
-    # build: 
-    #   context: /home/app
-    #   dockerfile: Dockerfile
     build: ./authentication/
     restart: always
     ports:
@@ -66,8 +57,6 @@ services:
       - APP_SECRET_KEY=e497c51f1a201412cfb13ae8837fd5a81d3740bd52bf12b22300c31af8d7c462
       - FE_HOST=127.0.0.1
       - FE_PORT=88
-    # volumes:
-    #   - auth_data:/code
     depends_on: #This is a lie
       - frontend
 
@@ -87,8 +76,6 @@ services:
       - minio_data:/data
 
 volumes:
-  # auth_data:
-  #   driver: local
   minio_data:
     driver: local
   db:
