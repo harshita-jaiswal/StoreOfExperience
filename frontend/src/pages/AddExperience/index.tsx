@@ -56,10 +56,17 @@ const AddExperience = () => {
                 imageData: expFormData.image,
             })
         ]).then((response) => {
-            console.log("Got response from upload file:", response);
+            // console.log("Got response from upload file:", response);
             setToastVisibility(true)
             if (response.length === 2) {
                 setSubmitted(SubmissionStatus.SubmitSucceeded);
+                setExpFormData({
+                    title: "",
+                    date: "",
+                    experience: "",
+                    image: null,
+                  })
+                  setImage(null)
             } else {
                 setSubmitted(SubmissionStatus.SubmitFailed);
             }
