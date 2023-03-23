@@ -17,7 +17,7 @@ services:
       - VITE_DB_NAME=experience
     depends_on:
       - postgres
-    command: ["./wait-for-it.sh", "postgres:5432", "--"]
+    # command: ["./wait-for-it.sh", "postgres:5432", "--"]
 
   frontend:
     container_name: frontend
