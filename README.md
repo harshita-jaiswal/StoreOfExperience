@@ -1,6 +1,8 @@
-# DOGGR SETUP
-(All commands are with respect to the root directory of the project)
+# StoreOfExperience 
+An application to store all your life experiences at one place. You can visit your life experiences at any time and re-live your memories. 
 
+### SETUP
+(All commands are with respect to the root directory of the project)
 > Clone repository
 > Copy and configure .env file (cp backend/.env.example backend/.env)
 > Install dependencies (cd backend/ && pnpm install)
