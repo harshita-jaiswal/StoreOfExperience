@@ -1,6 +1,12 @@
 # StoreOfExperience 
 An application to store all your life experiences at one place. You can visit your life experiences at any time and re-live your memories. 
 
+### Programming Language: 
+1. Backend: JavaScript, TypeScript
+2. Database: PostgreSQL
+3. Frontend: HTML5, CSS3, React, JavaScript, TypeScript
+4. Microservice: Flask (Python)
+
 ### SETUP
 (All commands are with respect to the root directory of the project)
 > Clone repository
@@ -13,10 +19,3 @@ An application to store all your life experiences at one place. You can visit yo
 > Test backend ( cd backend/ && pnpm test)
 > Start backend (cd backend/ && pnpm dev)
 
-### Auto-generating migration file from current Models
-
-This is ONLY NEEDED during our initial development in-class!
-Once you clone the repository with the migrations already in it,
-you ONLY do the above!
-> pnpm typeorm:drop
-> pnpm migration:generate ./src/db/migrations/initialize.ts
